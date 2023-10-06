@@ -1,0 +1,5 @@
+[
+  { "id": 0, "namaProyek": "jalan", "volume": "100 m", "biaya": "100000000", "lokasi": "zimbabwe", "keterangan": "Selesai" },
+  { "id": 1, "namaProyek": "jembatan", "volume": "20 m", "biaya": "500000000", "lokasi": "pantai gading", "keterangan": "Selesai" },
+  { "id": 2, "namaProyek": "drainase", "volume": "60 m", "biaya": "750000000", "lokasi": "kalen", "keterangan": "Selesai" }
+]
