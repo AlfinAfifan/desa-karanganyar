@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100 px-10 shadow-md sticky top-0 z-10">
       <div className="flex-1">
-        <h1 className="text-2xl font-semibold">Desa Karanganyar</h1>
+        <h1 className="text-2xl font-medium roboto">Administrasi Desa Karanganyar</h1>
       </div>
       <div className="flex-none gap-2">
         <div className="dropdown dropdown-end">

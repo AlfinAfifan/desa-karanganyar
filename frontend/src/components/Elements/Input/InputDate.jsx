@@ -1,10 +1,10 @@
 import React from 'react';
 
-const InputDate = ({ label, name, colSpan }) => {
+const InputDate = ({ label, name, colSpan, onChange, value }) => {
   return (
-    <div className={`flex flex-col w-48 gap-1 ${colSpan}`}>
+    <div className={`flex flex-col gap-1 ${colSpan}`}>
       <label htmlFor={name}>{label}</label>
-      <input type="date" className="input input-bordered border-slate-600 w-full max-w-xs" />
+      <input onChange={onChange} value={value} type="date" className="input input-bordered border-slate-600 w-full " />
     </div>
   );
 };

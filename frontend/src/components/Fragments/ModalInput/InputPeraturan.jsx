@@ -1,27 +1,150 @@
-import React from 'react';
+import { format } from 'date-fns';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import InputDate from '../../Elements/Input/InputDate';
 import Input from '../../Elements/Input/Input';
 import TextArea from '../../Elements/Input/TextArea';
+import InputFile from '../../Elements/Input/InputFile';
 import Button from '../../Elements/Button/Button';
+import { createPeraturan, updatePeraturan } from '../../../redux/actions/peraturan/thunkPeraturan';
 
-const InputPeraturan = () => {
+const InputPeraturan = ({ setIdSelected, idSelected }) => {
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.peraturan.data);
+
+  // Input & Edit
+  const dataId = data.map((dataFix) => dataFix.id);
+  const dataEdit = data.filter((f) => f.id === idSelected)[0];
+  const [title, setTitle] = useState('');
+
+  // Format input date
+  const formatDateInput = (tanggal) => {
+    // Change format date
+    const date = new Date(tanggal);
+    const formatNewDate = format(date, 'yyyy-MM-dd');
+
+    return formatNewDate;
+  };
+
+  const [formValues, setFormValues] = useState({
+    tanggalPer: '',
+    nomorPer: '',
+    tentang: '',
+    uraianSingkat: '',
+    tanggalAcc: '',
+    nomorAcc: '',
+    keterangan: '',
+    dokumen: null,
+  });
+
+  const form = useRef(null);
+
+  useEffect(() => {
+    if (dataEdit) {
+      setTitle('Edit Data Peraturan Desa');
+      // Jika dataEdit tersedia, atur nilai formValues sesuai dataEdit
+      setFormValues({
+        tanggalPer: formatDateInput(dataEdit.tanggalPer),
+        nomorPer: dataEdit.nomorPer,
+        tentang: dataEdit.tentang,
+        uraianSingkat: dataEdit.uraianSingkat,
+        tanggalAcc: formatDateInput(dataEdit.tanggalAcc),
+        nomorAcc: dataEdit.nomorAcc,
+        keterangan: dataEdit.keterangan,
+      });
+    } else {
+      setTitle('Input Data Peraturan Desa');
+
+      // Jika tidak ada dataEdit, reset nilai formValues
+      setFormValues({
+        tanggalPer: '',
+        nomorPer: '',
+        tentang: '',
+        uraianSingkat: '',
+        tanggalAcc: '',
+        nomorAcc: '',
+        keterangan: '',
+        dokumen: null,
+      });
+    }
+  }, [dataEdit]);
+
+  // On SUbmit
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const { tanggalPer, nomorPer, tentang, uraianSingkat, tanggalAcc, nomorAcc, keterangan, dokumen } = formValues;
+
+    const formData = new FormData();
+    formData.append('tanggalPer', tanggalPer);
+    formData.append('nomorPer', nomorPer);
+    formData.append('tentang', tentang);
+    formData.append('uraianSingkat', uraianSingkat);
+    formData.append('tanggalAcc', tanggalAcc);
+    formData.append('nomorAcc', nomorAcc);
+    formData.append('keterangan', keterangan);
+    formData.append('dokumen', dokumen);
+
+    if (dataId.includes(dataEdit?.id)) {
+      dispatch(updatePeraturan({ id: dataEdit.id, data: formData }));
+      setIdSelected('');
+    } else {
+      dispatch(createPeraturan(formData));
+    }
+
+    // Reset form
+    form.current.reset();
+    setFormValues({
+      tanggalPer: '',
+      nomorPer: '',
+      tentang: '',
+      uraianSingkat: '',
+      tanggalAcc: '',
+      nomorAcc: '',
+      keterangan: '',
+      dokumen: null,
+    });
+
+    // Menutup modal
+    document.getElementById('my_modal_3').close();
+  };
+
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-6/12 max-w-5xl">
         <form method="dialog">
           {/* if there is a button in form, it will close the modal */}
-          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+          <button
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            onClick={() => {
+              setIdSelected(null);
+            }}
+          >
+            ✕
+          </button>
         </form>
-        <h3 className="font-bold text-lg text-cyan-600">Input Data Peraturan Desa</h3>
+        <h3 className="font-bold text-lg text-cyan-600">{title}</h3>
         <div className="w-full h-0.5 bg-cyan-600 my-2 rounded-full"></div>
 
-        <form action="" className="flex flex-col gap-8">
-          <div className="grid grid-cols-2 gap-y-4 gap-x-5 mt-3 text-base">
-            <Input label="Nomor & Tanggal Peraturan" name="noTglPeraturan" placeholder="Masukkan nomor & tanggal peraturan" />
-            <Input name="tentang" label="Tentang" type="text" placeholder="Masukkan isi peraturan" />
-            <TextArea name="uraian" label="Uraian Singkat" placeholder="Masukkan uraian singkat" colSpan="col-span-2" />
-            <Input name="noTglPersetujuan" label="Nomor & Tanggal Persetujuan" type="text" placeholder="Masukkan nomor & tanggal persetujuan" />
-            <Input name="noTglDilaporkan" label="Nomor & Tanggal Dilaporkan" type="text" placeholder="Masukkan nomor & tanggal dilaporkan" />
-            <Input name="keterangan" label="Keterangan" type="text" placeholder="Masukkan keterangan" />
+        <form action="" ref={form} className="flex flex-col gap-8" onSubmit={handleSubmit}>
+          <div className="grid grid-cols-2 gap-y-4 gap-x-7 mt-3 text-base">
+            <InputDate label="Tanggal Keputusan" name="tanggalPer" value={formValues.tanggalPer} onChange={(e) => setFormValues({ ...formValues, tanggalPer: e.target.value })} />
+            <Input name="nomorPer" label="Nomor Keputusan" type="text" placeholder="Masukkan nomor keputusan" value={formValues.nomorPer} onChange={(e) => setFormValues({ ...formValues, nomorPer: e.target.value })} />
+            <InputDate label="Tanggal Dilaporkan" name="tanggalAcc" value={formValues.tanggalAcc} onChange={(e) => setFormValues({ ...formValues, tanggalAcc: e.target.value })} />
+            <Input name="nomorAcc" label="Tanggal Dilaporkan" type="text" placeholder="Masukkan nomor dilaporkan" value={formValues.nomorAcc} onChange={(e) => setFormValues({ ...formValues, nomorAcc: e.target.value })} />
+            <Input name="tentang" label="Tentang" type="text" placeholder="Masukkan perihal surat" colSpan="col-span-2" value={formValues.tentang} onChange={(e) => setFormValues({ ...formValues, tentang: e.target.value })} />
+            <TextArea
+              name="uraianSingkat"
+              label="Uraian Singkat"
+              type="text"
+              placeholder="Masukkan uraian singkat"
+              colSpan="col-span-2"
+              value={formValues.uraianSingkat}
+              onChange={(e) => setFormValues({ ...formValues, uraianSingkat: e.target.value })}
+            />
+
+            <Input name="keterangan" label="Keterangan" type="text" placeholder="Masukkan keterangan" value={formValues.keterangan} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
+            <InputFile label="Upload Dokumen" name="dokumen" onChange={(e) => setFormValues({ ...formValues, dokumen: e.target.files[0] })} />
+            {dataEdit && <div className="text-sm text-yellow-500 -mt-3 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
           </div>
           <Button bgColor="bg-cyan-600 py-3" hoverBgColor="hover:bg-cyan-700">
             Tambah Data
@@ -29,7 +152,13 @@ const InputPeraturan = () => {
         </form>
       </div>
       <form method="dialog" className="modal-backdrop">
-        <button>close</button>
+        <button
+          onClick={() => {
+            setIdSelected(null);
+          }}
+        >
+          close
+        </button>
       </form>
     </dialog>
   );

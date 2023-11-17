@@ -1,15 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import modalReducer from './actions/modalSlice';
-import inventarisReducer from './actions/inventarisSlice';
+import reducer from './reducer';
+import thunkMiddleware from 'redux-thunk';
 
 const store = configureStore({
-  reducer: { inventaris: inventarisReducer, modal: modalReducer },
-});
-
-console.log('on create store : ', store.getState());
-
-store.subscribe(() => {
-  console.log('store change : ', store.getState());
+  reducer,
+  middleware: [thunkMiddleware],
 });
 
 export default store;

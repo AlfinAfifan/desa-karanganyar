@@ -1,24 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from '../../Elements/Table/Table';
 import Thead from '../../Elements/Table/Thead';
-import Tbody from '../../Elements/Table/Tbody';
-import InputSuratKeluar from '../ModalInput/InputSuratKeluar';
+import Tr from '../../Elements/Table/Tr';
 import Button from '../../Elements/Button/Button';
 import ButtonIcon from '../../Elements/Button/ButtonIcon';
-import { HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash } from 'react-icons/hi2';
+import { HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash, HiPrinter } from 'react-icons/hi2';
 import ModalDetail from '../../Elements/Modal/ModalDetail';
-import file from '../../../assets/file/Profile.pdf';
-import { Viewer, Worker } from '@react-pdf-viewer/core';
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { format } from 'date-fns';
+import PdfViewer from '../PdfViewer/PdfViewer';
+import ModalConfirm from '../../Elements/Modal/ModalConfirm';
+import { deleteSuratKeluar, getSuratKeluar } from '../../../redux/actions/suratKeluar/thunkSuratKeluar';
+import InputSuratKeluar from '../ModalInput/InputSuratKeluar';
 
 const TableSuratKeluar = () => {
-  // READ PDF
-  const newPlugin = defaultLayoutPlugin();
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.suratKeluar.data);
 
+  useEffect(() => {
+    dispatch(getSuratKeluar());
+  }, [dispatch]);
+
+  // Format Nomor / tanggal keputusan
+  const formatDate = (tanggal) => {
+    // Change format date
+    const date = new Date(tanggal);
+    const formatNewDate = format(date, 'dd/MM/yyyy');
+
+    return formatNewDate;
+  };
+
+  // Get Detail
   const [idSelected, setIdSelected] = useState(null);
+  const [urlSelected, setUrlSelected] = useState(null);
+
+  // DELETE DATA
+  const handleDelete = (id) => {
+    dispatch(deleteSuratKeluar(id));
+  };
 
   return (
     <>
@@ -27,15 +46,11 @@ const TableSuratKeluar = () => {
           Tambah Data
         </Button>
 
-        <InputSuratKeluar />
-
-        <select className="select select-sm bg-transparent border-slate-600 hover:bg-slate-600 border-collapse border-2 px-4 hover:text-white">
-          <option defaultValue>Filter</option>
-          <option>Tanggal</option>
-          <option>Nomor Surat</option>
-        </select>
+        <Button border="border-gray-700 border-2" bgColor="transparent" textColor="text-gray-700" hoverBgColor="hover:bg-gray-700 hover:text-white">
+          <HiPrinter />
+          Cetak
+        </Button>
       </div>
-
       <Table>
         <Thead>
           <th>No</th>
@@ -48,56 +63,69 @@ const TableSuratKeluar = () => {
           <th>Keterangan</th>
           <th></th>
         </Thead>
-        <Tbody>
-          <td className="font-semibold">1</td>
-          <td>20 agustus</td>
-          <td>21334</td>
-          <td>Pemecatan</td>
-          <td>Kantor Polisi</td>
-          <td>Kantor Polisi</td>
-          <td>Kantor Polisi</td>
-          <td>Kantor Polisi</td>
-          <td className="flex justify-end">
-            <div className="flex text-2xl">
-              {/* Hapus */}
-              <ButtonIcon
-                hoverBgColor="hover:bg-slate-200"
-                onClick={() => {
-                  document.getElementById('my_modal_1').showModal(), setIdSelected(datafix.id);
-                }}
-              >
-                <HiOutlineTrash className="text-red-800" />
-              </ButtonIcon>
+        <tbody>
+          {data
+            .slice(0)
+            .reverse()
+            .map((datafix, index) => (
+              <Tr key={index}>
+                <td className="font-semibold">{(index += 1)}</td>
+                <td>{formatDate(datafix.tanggal)}</td>
+                <td>{datafix.nomor_surat}</td>
+                <td>{datafix.perihal}</td>
+                <td>{datafix.instansiDituju}</td>
+                <td>{datafix.penanggungJawab}</td>
+                <td>{formatDate(datafix.tanggal_surat)}</td>
+                <td>{datafix.keterangan}</td>
+                <td className="flex justify-end">
+                  <div className="flex text-2xl">
+                    {/* Hapus */}
+                    <ButtonIcon
+                      hoverBgColor="hover:bg-slate-200"
+                      onClick={() => {
+                        document.getElementById('my_modal_1').showModal(), setIdSelected(datafix.id);
+                      }}
+                    >
+                      <HiOutlineTrash className="text-red-800" />
+                    </ButtonIcon>
 
-              {/* Edit */}
-              <ButtonIcon
-                hoverBgColor="hover:bg-slate-200"
-                onClick={() => {
-                  document.getElementById('my_modal_3').showModal(), setIdSelected(datafix.id);
-                }}
-              >
-                <HiOutlinePencilSquare className="text-cyan-800" />
-              </ButtonIcon>
+                    {/* Edit */}
+                    <ButtonIcon
+                      hoverBgColor="hover:bg-slate-200"
+                      onClick={() => {
+                        document.getElementById('my_modal_3').showModal(), setIdSelected(datafix.id);
+                      }}
+                    >
+                      <HiOutlinePencilSquare className="text-cyan-800" />
+                    </ButtonIcon>
 
-              {/* Detail */}
-              <ButtonIcon
-                hoverBgColor="hover:bg-slate-200"
-                onClick={() => {
-                  document.getElementById('modal_file').showModal(), setIdSelected(datafix.id);
-                }}
-              >
-                <HiOutlineSquare2Stack className="text-yellow-600" />
-              </ButtonIcon>
-            </div>
-          </td>
-        </Tbody>
+                    {/* Detail */}
+                    <ButtonIcon
+                      hoverBgColor="hover:bg-slate-200"
+                      onClick={() => {
+                        document.getElementById('modal_file').showModal(), setUrlSelected(datafix.url);
+                      }}
+                    >
+                      <HiOutlineSquare2Stack className="text-yellow-600" />
+                    </ButtonIcon>
+                  </div>
+                </td>
+              </Tr>
+            ))}
+        </tbody>
       </Table>
 
+      {/* Modal Input */}
+      <InputSuratKeluar idSelected={idSelected} setIdSelected={setIdSelected} />
+
+      {/* Modal PDF */}
       <ModalDetail>
-        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-          <Viewer fileUrl={file} plugins={[newPlugin]} />;
-        </Worker>
+        <PdfViewer url={urlSelected} />
       </ModalDetail>
+
+      <ModalConfirm title="Konfirmasi Hapus!" onClick={() => handleDelete(idSelected)}>
+        Yakin untuk menghapus data ini ?
+      </ModalConfirm>
     </>
   );
 };

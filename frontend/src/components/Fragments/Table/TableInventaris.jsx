@@ -1,24 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import Table from '../../Elements/Table/Table';
 import Thead from '../../Elements/Table/Thead';
-import Tbody from '../../Elements/Table/Tbody';
+import Tr from '../../Elements/Table/Tr';
 import InputInventaris from '../ModalInput/InputInventaris';
 import Button from '../../Elements/Button/Button';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ButtonIcon from '../../Elements/Button/ButtonIcon';
-import { HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash } from 'react-icons/hi2';
+import { HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash, HiPrinter } from 'react-icons/hi2';
 import ModalConfirm from '../../Elements/Modal/ModalConfirm';
 import ModalDetail from '../../Elements/Modal/ModalDetail';
+import { getInventaris } from '../../../redux/actions/inventaris/thunkInventaris';
 
 const TableInventaris = () => {
-  const data = useSelector((state) => state.inventaris);
+  // Fetch API
+  const dispatch = useDispatch();
+
+  const data = useSelector((state) => state.inventaris.data);
+
+  useEffect(() => {
+    dispatch(getInventaris());
+  }, []);
+
+  // Get Detail
   const [idSelected, setIdSelected] = useState(null);
   const [detail, setDetail] = useState({
-    namaProyek: '',
-    volume: '',
-    biaya: '',
-    lokasi: '',
-    keterangan: '',
+    fotoSebelum: '',
+    fotoProses: '',
+    fotoSebelum: '',
+    urlSebelum: '',
+    urlProses: '',
+    urlSebelum: '',
   });
 
   const detailData = data.filter((f) => f.id === idSelected)[0];
@@ -26,11 +37,12 @@ const TableInventaris = () => {
   useEffect(() => {
     if (detailData) {
       setDetail({
-        namaProyek: detailData.namaProyek,
-        volume: detailData.volume,
-        biaya: detailData.biaya,
-        lokasi: detailData.lokasi,
-        keterangan: detailData.keterangan,
+        fotoSebelum: detailData.fotoSebelum,
+        fotoProses: detailData.fotoProses,
+        fotoSesudah: detailData.fotoSesudah,
+        urlSebelum: detailData.urlSebelum,
+        urlProses: detailData.urlProses,
+        urlSesudah: detailData.urlSesudah,
       });
     }
   }, [detailData]);
@@ -41,11 +53,10 @@ const TableInventaris = () => {
         <Button bgColor="bg-cyan-600" hoverBgColor="hover:bg-cyan-700" onClick={() => document.getElementById('my_modal_3').showModal()}>
           Tambah Data
         </Button>
-        <select className="select select-sm bg-transparent border-slate-600 hover:bg-slate-600 border-collapse border-2 px-4 hover:text-white">
-          <option defaultValue>Filter</option>
-          <option>Tanggal</option>
-          <option>Nomor Surat</option>
-        </select>
+        <Button border="border-gray-700 border-2" bgColor="transparent" textColor="text-gray-700" hoverBgColor="hover:bg-gray-700 hover:text-white">
+          <HiPrinter />
+          Cetak
+        </Button>
       </div>
       <Table>
         <Thead>
@@ -58,49 +69,51 @@ const TableInventaris = () => {
           <th></th>
         </Thead>
 
-        {data.map((datafix, index) => (
-          <Tbody key={index}>
-            <td className="font-semibold cursor-pointer">{datafix.id}</td>
-            <td>{datafix.namaProyek}</td>
-            <td>{datafix.volume}</td>
-            <td>Rp. {datafix.biaya.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
-            <td>{datafix.lokasi}</td>
-            <td>{datafix.keterangan}</td>
-            <td className="flex justify-end">
-              <div className="flex text-2xl">
-                {/* Hapus */}
-                <ButtonIcon
-                  hoverBgColor="hover:bg-slate-200"
-                  onClick={() => {
-                    document.getElementById('my_modal_1').showModal(), setIdSelected(datafix.id);
-                  }}
-                >
-                  <HiOutlineTrash className="text-red-800" />
-                </ButtonIcon>
+        <tbody>
+          {data.map((datafix, index) => (
+            <Tr key={index}>
+              <td className="font-semibold cursor-pointer">{(index += 1)}</td>
+              <td>{datafix.namaProyek}</td>
+              <td>{datafix.volume}</td>
+              <td>{datafix.biaya.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
+              <td>{datafix.lokasi}</td>
+              <td>{datafix.keterangan}</td>
+              <td className="flex justify-end">
+                <div className="flex text-2xl">
+                  {/* Hapus */}
+                  <ButtonIcon
+                    hoverBgColor="hover:bg-slate-200"
+                    onClick={() => {
+                      document.getElementById('my_modal_1').showModal(), setIdSelected(datafix.id);
+                    }}
+                  >
+                    <HiOutlineTrash className="text-red-800" />
+                  </ButtonIcon>
 
-                {/* Edit */}
-                <ButtonIcon
-                  hoverBgColor="hover:bg-slate-200"
-                  onClick={() => {
-                    document.getElementById('my_modal_3').showModal(), setIdSelected(datafix.id);
-                  }}
-                >
-                  <HiOutlinePencilSquare className="text-cyan-800" />
-                </ButtonIcon>
+                  {/* Edit */}
+                  <ButtonIcon
+                    hoverBgColor="hover:bg-slate-200"
+                    onClick={() => {
+                      document.getElementById('my_modal_3').showModal(), setIdSelected(datafix.id);
+                    }}
+                  >
+                    <HiOutlinePencilSquare className="text-cyan-800" />
+                  </ButtonIcon>
 
-                {/* Detail */}
-                <ButtonIcon
-                  hoverBgColor="hover:bg-slate-200"
-                  onClick={() => {
-                    document.getElementById('modal_file').showModal(), setIdSelected(datafix.id);
-                  }}
-                >
-                  <HiOutlineSquare2Stack className="text-yellow-600" />
-                </ButtonIcon>
-              </div>
-            </td>
-          </Tbody>
-        ))}
+                  {/* Detail */}
+                  <ButtonIcon
+                    hoverBgColor="hover:bg-slate-200"
+                    onClick={() => {
+                      document.getElementById('modal_file').showModal(), setIdSelected(datafix.id);
+                    }}
+                  >
+                    <HiOutlineSquare2Stack className="text-yellow-600" />
+                  </ButtonIcon>
+                </div>
+              </td>
+            </Tr>
+          ))}
+        </tbody>
       </Table>
       {/* MODAL */}
       <InputInventaris setIdEdit={setIdSelected} idEdit={idSelected} />

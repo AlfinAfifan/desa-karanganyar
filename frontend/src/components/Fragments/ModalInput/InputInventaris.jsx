@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Input from '../../Elements/Input/Input';
 import Button from '../../Elements/Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
-import { inputData, updateData } from '../../../redux/actions/inventarisSlice';
+import { createInventaris } from '../../../redux/actions/inventaris/thunkInventaris';
 import InputFile from '../../Elements/Input/InputFile';
 
 const InputInventaris = ({ idEdit, setIdEdit }) => {
@@ -10,7 +10,7 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
 
   const [title, setTitle] = useState('');
 
-  const data = useSelector((state) => state.inventaris);
+  const data = useSelector((state) => state.inventaris.data);
   const dataId = data.map((dataFix) => dataFix.id);
 
   const dataEdit = data.filter((f) => f.id === idEdit)[0];
@@ -59,7 +59,7 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
       setIdEdit('');
     } else {
       // Logika untuk menambahkan data baru
-      dispatch(inputData({ id: 3, namaProyek, volume, biaya, lokasi, keterangan }));
+      dispatch(createInventaris({ namaProyek, volume, biaya, lokasi, keterangan }));
     }
     // Reset nilai formulir
     setFormValues({
@@ -87,7 +87,7 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
         <div className="w-full h-0.5 bg-cyan-600 my-2 rounded-full"></div>
 
         <form action="" onSubmit={handleSubmit} className="flex flex-col gap-8">
-          <div className="grid grid-cols-2 gap-y-4 gap-x-5 mt-3 text-base">
+          <div className="grid grid-cols-2 gap-y-4 gap-x-7 mt-3 text-base">
             <Input name="namaProyek" label="Jenis / Nama Proyek" type="text" placeholder="Masukkan jenis / nama proyek" value={formValues.namaProyek} onChange={(e) => setFormValues({ ...formValues, namaProyek: e.target.value })} />
             <Input name="volume" label="Volume" type="text" placeholder="Masukkan volume proyek" value={formValues.volume} onChange={(e) => setFormValues({ ...formValues, volume: e.target.value })} />
             <Input name="biaya" label="Biaya" type="text" placeholder="Masukkan biaya proyek" value={formValues.biaya} onChange={(e) => setFormValues({ ...formValues, biaya: e.target.value })} />
