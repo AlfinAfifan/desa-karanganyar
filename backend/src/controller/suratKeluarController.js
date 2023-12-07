@@ -47,7 +47,7 @@ export const createSuratKeluar = (req, res) => {
   // filename and url
   const ext = path.extname(fileSurat.name);
   const timestamp = new Date().getTime();
-  const fileName = fileSurat.md5 + timestamp + '.docx';
+  const fileName = fileSurat.md5 + timestamp + ext.toLowerCase();
   const url = `${req.protocol}://${process.env.DOMAIN}/SuratKeluar/${fileName}`;
 
   // allowed type extension image
@@ -109,7 +109,7 @@ export const updateSuratKeluar = async (req, res) => {
     const fileSurat = req.files.dokumen;
     const ext = path.extname(fileSurat.name);
     const timestamp = new Date().getTime();
-    fileName = fileSurat.md5 + timestamp + '.docx';
+    fileName = fileSurat.md5 + timestamp + ext.toLowerCase();
 
     // allowed type extension image
     const allowedType = ['.pdf'];

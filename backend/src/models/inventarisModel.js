@@ -6,6 +6,7 @@ const { DataTypes } = Sequelize;
 const inventarisModel = db.define(
   'inventaris',
   {
+    tanggal: DataTypes.DATE,
     namaProyek: DataTypes.STRING,
     volume: DataTypes.STRING,
     biaya: DataTypes.BIGINT,

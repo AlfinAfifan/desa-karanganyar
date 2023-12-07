@@ -4,7 +4,7 @@ const Input = ({ name, label, placeholder, type, colSpan, colStart, onChange, va
   return (
     <div className={`flex flex-col gap-1 ${colSpan} ${colStart}`}>
       <label htmlFor={name}>{label}</label>
-      <input onChange={onChange} type={type} placeholder={placeholder} name={name} value={value} className="input input-bordered border-slate-600 w-full" />
+      <input onChange={onChange} type={type} placeholder={placeholder} id={name} value={value} required className="input input-bordered border-slate-600 w-full" />
     </div>
   );
 };

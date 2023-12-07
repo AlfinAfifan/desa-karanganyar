@@ -1,7 +1,20 @@
 import React from 'react';
 import ModalLogout from '../Modal/ModalLogout';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('email');
+    sessionStorage.removeItem('name');
+    const accessToken = sessionStorage.getItem('access_token');
+    if (!accessToken) {
+      navigate('/', { replace: true });
+      window.location.reload();
+    }
+  };
   return (
     <div className="navbar bg-base-100 px-10 shadow-md sticky top-0 z-10">
       <div className="flex-1">
@@ -23,7 +36,9 @@ const Navbar = () => {
       </div>
 
       {/* Modal Konfirm */}
-      <ModalLogout title="Konfirmasi Logout!">Yakin untuk keluar dari halaman ini ?</ModalLogout>
+      <ModalLogout onClick={handleLogout} title="Konfirmasi Logout!">
+        Yakin untuk keluar dari halaman ini ?
+      </ModalLogout>
     </div>
   );
 };

@@ -1,8 +1,5 @@
 import React from 'react';
 import Button from '../Button/Button';
-import { useDispatch } from 'react-redux';
-import { deleteKeputusan } from '../../../redux/actions/keputusan/thunkKeputusan';
-// import { deleteData } from '../../../redux/actions/inventarisSlice';
 
 const ModalConfirm = ({ title, children, onClick }) => {
   return (

@@ -1,4 +1,3 @@
-import { format } from 'date-fns';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import InputDate from '../../Elements/Input/InputDate';
@@ -7,6 +6,8 @@ import TextArea from '../../Elements/Input/TextArea';
 import InputFile from '../../Elements/Input/InputFile';
 import Button from '../../Elements/Button/Button';
 import { createPeraturan, updatePeraturan } from '../../../redux/actions/peraturan/thunkPeraturan';
+import { formatDateInput } from '../FormatDate/FormatDateInput';
+import { toast } from 'react-toastify';
 
 const InputPeraturan = ({ setIdSelected, idSelected }) => {
   const dispatch = useDispatch();
@@ -16,15 +17,7 @@ const InputPeraturan = ({ setIdSelected, idSelected }) => {
   const dataId = data.map((dataFix) => dataFix.id);
   const dataEdit = data.filter((f) => f.id === idSelected)[0];
   const [title, setTitle] = useState('');
-
-  // Format input date
-  const formatDateInput = (tanggal) => {
-    // Change format date
-    const date = new Date(tanggal);
-    const formatNewDate = format(date, 'yyyy-MM-dd');
-
-    return formatNewDate;
-  };
+  const [caption, setCaption] = useState('');
 
   const [formValues, setFormValues] = useState({
     tanggalPer: '',
@@ -42,6 +35,8 @@ const InputPeraturan = ({ setIdSelected, idSelected }) => {
   useEffect(() => {
     if (dataEdit) {
       setTitle('Edit Data Peraturan Desa');
+      setCaption('Simpan Perubahan');
+
       // Jika dataEdit tersedia, atur nilai formValues sesuai dataEdit
       setFormValues({
         tanggalPer: formatDateInput(dataEdit.tanggalPer),
@@ -54,6 +49,7 @@ const InputPeraturan = ({ setIdSelected, idSelected }) => {
       });
     } else {
       setTitle('Input Data Peraturan Desa');
+      setCaption('Tambah Data');
 
       // Jika tidak ada dataEdit, reset nilai formValues
       setFormValues({
@@ -87,8 +83,10 @@ const InputPeraturan = ({ setIdSelected, idSelected }) => {
     if (dataId.includes(dataEdit?.id)) {
       dispatch(updatePeraturan({ id: dataEdit.id, data: formData }));
       setIdSelected('');
+      toast.success('Edit Data Berhasil');
     } else {
       dispatch(createPeraturan(formData));
+      toast.success('Tambah Data Berhasil');
     }
 
     // Reset form
@@ -122,32 +120,23 @@ const InputPeraturan = ({ setIdSelected, idSelected }) => {
             ✕
           </button>
         </form>
-        <h3 className="font-bold text-lg text-cyan-600">{title}</h3>
-        <div className="w-full h-0.5 bg-cyan-600 my-2 rounded-full"></div>
+        <h3 className="font-bold text-lg text-cyan-700">{title}</h3>
+        <div className="w-full h-0.5 bg-cyan-700 my-2 rounded-full"></div>
 
-        <form action="" ref={form} className="flex flex-col gap-8" onSubmit={handleSubmit}>
+        <form action="" ref={form} className="flex flex-col gap-5" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-y-4 gap-x-7 mt-3 text-base">
             <InputDate label="Tanggal Keputusan" name="tanggalPer" value={formValues.tanggalPer} onChange={(e) => setFormValues({ ...formValues, tanggalPer: e.target.value })} />
-            <Input name="nomorPer" label="Nomor Keputusan" type="text" placeholder="Masukkan nomor keputusan" value={formValues.nomorPer} onChange={(e) => setFormValues({ ...formValues, nomorPer: e.target.value })} />
+            <Input name="nomorPer" label="Nomor Keputusan" type="text" value={formValues.nomorPer} onChange={(e) => setFormValues({ ...formValues, nomorPer: e.target.value })} />
             <InputDate label="Tanggal Dilaporkan" name="tanggalAcc" value={formValues.tanggalAcc} onChange={(e) => setFormValues({ ...formValues, tanggalAcc: e.target.value })} />
-            <Input name="nomorAcc" label="Tanggal Dilaporkan" type="text" placeholder="Masukkan nomor dilaporkan" value={formValues.nomorAcc} onChange={(e) => setFormValues({ ...formValues, nomorAcc: e.target.value })} />
-            <Input name="tentang" label="Tentang" type="text" placeholder="Masukkan perihal surat" colSpan="col-span-2" value={formValues.tentang} onChange={(e) => setFormValues({ ...formValues, tentang: e.target.value })} />
-            <TextArea
-              name="uraianSingkat"
-              label="Uraian Singkat"
-              type="text"
-              placeholder="Masukkan uraian singkat"
-              colSpan="col-span-2"
-              value={formValues.uraianSingkat}
-              onChange={(e) => setFormValues({ ...formValues, uraianSingkat: e.target.value })}
-            />
-
-            <Input name="keterangan" label="Keterangan" type="text" placeholder="Masukkan keterangan" value={formValues.keterangan} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
-            <InputFile label="Upload Dokumen" name="dokumen" onChange={(e) => setFormValues({ ...formValues, dokumen: e.target.files[0] })} />
+            <Input name="nomorAcc" label="Nomor Dilaporkan" type="text" value={formValues.nomorAcc} onChange={(e) => setFormValues({ ...formValues, nomorAcc: e.target.value })} />
+            <Input name="tentang" label="Tentang" type="text" colSpan="col-span-2" value={formValues.tentang} onChange={(e) => setFormValues({ ...formValues, tentang: e.target.value })} />
+            <TextArea name="uraianSingkat" label="Uraian Singkat" type="text" colSpan="col-span-2" value={formValues.uraianSingkat} onChange={(e) => setFormValues({ ...formValues, uraianSingkat: e.target.value })} />
+            <Input name="keterangan" label="Keterangan" type="text" value={formValues.keterangan} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
+            <InputFile required={dataEdit ? '' : 'required'} label="Upload Dokumen" name="dokumen" onChange={(e) => setFormValues({ ...formValues, dokumen: e.target.files[0] })} />
             {dataEdit && <div className="text-sm text-yellow-500 -mt-3 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
           </div>
-          <Button bgColor="bg-cyan-600 py-3" hoverBgColor="hover:bg-cyan-700">
-            Tambah Data
+          <Button bgColor="bg-cyan-700 py-3" hoverBgColor="hover:bg-cyan-600">
+            {caption}
           </Button>
         </form>
       </div>

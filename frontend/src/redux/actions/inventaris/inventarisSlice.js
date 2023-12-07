@@ -1,53 +1,100 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getInventaris, createInventaris } from './thunkInventaris';
+import { getInventaris, createInventaris, updateInventaris, deleteInventaris } from './thunkInventaris';
 
 // READ
 const initialState = {
   data: [],
-  loadingInventaris: false,
-  errorInventaris: null,
+  loading: false,
+  error: null,
+  status: null,
 };
 
 const inventarisSlice = createSlice({
   name: 'inventaris',
   initialState: initialState,
-
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(getInventaris.pending, (state, action) => {
         return {
           ...state,
-          loadingInventaris: true,
+          loading: true,
         };
       })
       .addCase(getInventaris.fulfilled, (state, action) => {
         return {
           ...state,
           data: action.payload,
-          loadingInventaris: false,
+          loading: false,
         };
       })
       .addCase(getInventaris.rejected, (state, action) => {
         return {
           ...state,
-          errorInventaris: action.payload,
+          error: action.payload,
         };
       })
       .addCase(createInventaris.pending, (state, action) => {
         return {
           ...state,
-          loadingInventaris: true,
+          loading: true,
+          status: null,
         };
       })
       .addCase(createInventaris.fulfilled, (state, action) => {
-        state.data.push(action.payload);
-        state.loadingInventaris = false;
+        return {
+          ...state,
+          data: action.payload,
+          loading: false,
+          status: 'success',
+        };
       })
       .addCase(createInventaris.rejected, (state, action) => {
         return {
           ...state,
-          errorInventaris: action.payload,
+          error: action.payload,
+          status: 'failed',
+        };
+      })
+      .addCase(updateInventaris.pending, (state, action) => {
+        return {
+          ...state,
+          loading: true,
+          status: null,
+        };
+      })
+      .addCase(updateInventaris.fulfilled, (state, action) => {
+        return {
+          ...state,
+          data: action.payload,
+          loading: false,
+          status: 'success',
+        };
+      })
+      .addCase(updateInventaris.rejected, (state, action) => {
+        return {
+          ...state,
+          error: action.payload,
+          status: 'failed',
+        };
+      })
+      .addCase(deleteInventaris.pending, (state, action) => {
+        return {
+          ...state,
+          loading: true,
+        };
+      })
+      .addCase(deleteInventaris.fulfilled, (state, action) => {
+        return {
+          ...state,
+          data: action.payload,
+          loading: false,
+        };
+      })
+      .addCase(deleteInventaris.rejected, (state, action) => {
+        return {
+          ...state,
+          error: action.payload,
         };
       });
   },
@@ -56,36 +103,3 @@ const inventarisSlice = createSlice({
 const { actions: inventarisActions, reducer: inventarisReducer } = inventarisSlice;
 export { inventarisActions, inventarisReducer };
 export default inventarisSlice;
-
-// export const { inputData, updateData, deleteData } = inventarisSlice.actions;
-
-// const inventarisSlice = createSlice({
-//   name: 'inventaris',
-//   initialState: data,
-//   reducers: {
-//     inputData: (state, action) => {
-//       state.push(action.payload);
-//     },
-//     updateData: (state, action) => {
-//       const { id, namaProyek, volume, biaya, lokasi, keterangan } = action.payload;
-//       const dataUpdate = state.find((data) => data.id == id);
-
-//       if (dataUpdate) {
-//         dataUpdate.namaProyek = namaProyek;
-//         dataUpdate.volume = volume;
-//         dataUpdate.biaya = biaya;
-//         dataUpdate.lokasi = lokasi;
-//         dataUpdate.keterangan = keterangan;
-//       }
-//     },
-//     deleteData: (state, action) => {
-//       const { id } = action.payload;
-//       const dataDelete = state.find((data) => data.id == id);
-//       if (dataDelete) {
-//         return state.filter((f) => f.id !== id);
-//       }
-//     },
-//   },
-// });
-
-// export default inventarisSlice.reducer;

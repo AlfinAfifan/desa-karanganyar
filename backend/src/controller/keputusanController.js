@@ -47,7 +47,7 @@ export const createKeputusan = (req, res) => {
   // filename and url
   const ext = path.extname(fileSurat.name);
   const timestamp = new Date().getTime();
-  const fileName = fileSurat.md5 + timestamp + '.docx';
+  const fileName = fileSurat.md5 + timestamp + ext.toLowerCase();
   const url = `${req.protocol}://${process.env.DOMAIN}/Keputusan/${fileName}`;
 
   // allowed type extension image
@@ -109,7 +109,7 @@ export const updateKeputusan = async (req, res) => {
     const fileSurat = req.files.dokKeputusan;
     const ext = path.extname(fileSurat.name);
     const timestamp = new Date().getTime();
-    fileName = fileSurat.md5 + timestamp + '.docx';
+    fileName = fileSurat.md5 + timestamp + ext.toLowerCase();
 
     // allowed type extension image
     const allowedType = ['.pdf'];

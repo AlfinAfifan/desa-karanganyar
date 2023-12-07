@@ -5,52 +5,135 @@ import Tr from '../../Elements/Table/Tr';
 import Button from '../../Elements/Button/Button';
 import InputSuratMasuk from '../ModalInput/InputSuratMasuk';
 import ButtonIcon from '../../Elements/Button/ButtonIcon';
-import { HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash, HiPrinter } from 'react-icons/hi2';
+import { HiCloudArrowUp, HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash } from 'react-icons/hi2';
 import ModalDetail from '../../Elements/Modal/ModalDetail';
 import { useDispatch, useSelector } from 'react-redux';
 import { format } from 'date-fns';
 import PdfViewer from '../PdfViewer/PdfViewer';
 import ModalConfirm from '../../Elements/Modal/ModalConfirm';
 import { deleteSuratMasuk, getSuratMasuk } from '../../../redux/actions/suratMasuk/thunkSuratMasuk';
+import { ExportSuratMasuk } from '../Export/ExportSuratMasuk';
+import { formatDate } from '../FormatDate/FormatDate';
+import { toast } from 'react-toastify';
 
 const TableSuratMasuk = () => {
+  // GET DATA
   const dispatch = useDispatch();
   const data = useSelector((state) => state.suratMasuk.data);
+  const [filteredData, setFilteredData] = useState(data);
 
   useEffect(() => {
     dispatch(getSuratMasuk());
   }, [dispatch]);
 
-  // Format Nomor / tanggal keputusan
-  const formatDate = (tanggal) => {
-    // Change format date
-    const date = new Date(tanggal);
-    const formatNewDate = format(date, 'dd/MM/yyyy');
+  // SORT TAHUN DROPDOWN
+  const dropdownYears = [...new Set(data.map((item) => new Date(item.tanggal_surat).getFullYear()))].sort((a, b) => b - a);
 
-    return formatNewDate;
+  // Filter berdasarkan tahun
+  const [selectedYear, setSelectedYear] = useState('');
+  const latestYear = Math.max(...data.map((item) => new Date(item.tanggal_surat).getFullYear()));
+
+  useEffect(() => {
+    selectedYear ? handleFilter(selectedYear) : handleFilter(latestYear.toString());
+  }, [data]);
+
+  const handleFilter = (year) => {
+    const filtered = data
+      .filter((item) => {
+        const suratYear = new Date(item.tanggal_surat).getFullYear().toString();
+        return year === '' || suratYear === year;
+      })
+      .sort((a, b) => {
+        // Urutkan descending berdasarkan tanggal surat
+        const dateA = new Date(a.tanggal_surat);
+        const dateB = new Date(b.tanggal_surat);
+        return dateA - dateB;
+      });
+
+    setFilteredData(filtered);
   };
 
-  // Get Detail
+  // SEARCH
+  const year = selectedYear ? selectedYear : latestYear.toString();
+
+  const handleSearch = (value) => {
+    const filtered = data
+      .filter((item) => {
+        const suratYear = new Date(item.tanggal_surat).getFullYear().toString();
+        const isMatchingYear = suratYear === year;
+
+        if (isMatchingYear) {
+          return (
+            item.nomor_surat.toLowerCase().includes(value.toLowerCase()) ||
+            item.perihal.toLowerCase().includes(value.toLowerCase()) ||
+            item.instansiDituju.toLowerCase().includes(value.toLowerCase()) ||
+            item.penanggungJawab.toLowerCase().includes(value.toLowerCase()) ||
+            item.keterangan.toLowerCase().includes(value.toLowerCase()) ||
+            formatDate(item.tanggal_surat).includes(value) ||
+            formatDate(item.tanggal).includes(value)
+          );
+        }
+
+        return false;
+      })
+      .sort((a, b) => {
+        // Urutkan descending berdasarkan tanggal surat
+        const dateA = new Date(a.tanggal_surat);
+        const dateB = new Date(b.tanggal_surat);
+        return dateA - dateB;
+      });
+
+    setFilteredData(filtered);
+  };
+
+  // GET DETAIL
   const [idSelected, setIdSelected] = useState(null);
   const [urlSelected, setUrlSelected] = useState(null);
 
   // DELETE DATA
   const handleDelete = (id) => {
     dispatch(deleteSuratMasuk(id));
+    toast.success('Hapus Data Berhasil');
   };
 
   return (
     <>
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <div className="text-xl font-medium roboto flex items-center gap-3">
+          Data Surat Masuk
+          <select
+            onChange={(e) => {
+              handleFilter(e.target.value), setSelectedYear(e.target.value);
+            }}
+            value={selectedYear}
+            className="select select-bordered border-slate-600 border-2 max-w-xs select-sm text-base"
+          >
+            {dropdownYears.map((year) => (
+              <option key={year} value={year.toString()}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-control">
+          <input onChange={(e) => handleSearch(e.target.value)} type="text" placeholder="Search" className="input border-2 border-slate-600 w-24 md:w-auto h-9" />
+        </div>
+      </div>
+      <div className="bg-slate-200 w-full h-0.5 mt-5 rounded-full"></div>
+
+      {/* Table */}
       <div className="flex justify-between items-center mt-7">
-        <Button bgColor="bg-cyan-600" hoverBgColor="hover:bg-cyan-700" onClick={() => document.getElementById('my_modal_3').showModal()}>
+        <Button bgColor="bg-cyan-700" hoverBgColor="hover:bg-cyan-600" onClick={() => document.getElementById('my_modal_3').showModal()}>
           Tambah Data
         </Button>
 
-        <Button border="border-gray-700 border-2" bgColor="transparent" textColor="text-gray-700" hoverBgColor="hover:bg-gray-700 hover:text-white">
-          <HiPrinter />
-          Cetak
+        <Button onClick={() => ExportSuratMasuk(filteredData, year)} border="border-gray-700 border-2" bgColor="transparent" textColor="text-gray-700" hoverBgColor="hover:bg-gray-700 hover:text-white">
+          <HiCloudArrowUp className="text-2xl" />
+          Export
         </Button>
       </div>
+
       <Table>
         <Thead>
           <th>No</th>
@@ -64,7 +147,7 @@ const TableSuratMasuk = () => {
           <th></th>
         </Thead>
         <tbody>
-          {data
+          {filteredData
             .slice(0)
             .reverse()
             .map((datafix, index) => (
@@ -116,7 +199,7 @@ const TableSuratMasuk = () => {
       </Table>
 
       {/* Modal Input */}
-      <InputSuratMasuk idSelected={idSelected} setIdSelected={setIdSelected} />
+      <InputSuratMasuk idSelected={idSelected} setIdSelected={setIdSelected} year={year} />
 
       {/* Modal PDF */}
       <ModalDetail>
