@@ -10,10 +10,12 @@ const ModalConfirm = ({ title, children, onClick }) => {
         <div className="modal-action">
           <form method="dialog" className="flex gap-4">
             {/* if there is a button in form, it will close the modal */}
-            <Button bgColor="bg-red-700" onClick={onClick}>
+            <Button bgColor="bg-red-700" hoverBgColor="hover:bg-red-600" onClick={onClick}>
               Hapus
             </Button>
-            <Button bgColor="bg-gray-400">Batal</Button>
+            <Button bgColor="bg-gray-400" hoverBgColor="hover:bg-gray-500">
+              Batal
+            </Button>
           </form>
         </div>
       </div>

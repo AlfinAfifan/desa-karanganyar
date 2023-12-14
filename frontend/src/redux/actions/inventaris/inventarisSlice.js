@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getInventaris, createInventaris, updateInventaris, deleteInventaris } from './thunkInventaris';
+import { getInventaris, createInventaris, updateInventaris, deleteInventaris, deleteByYear } from './thunkInventaris';
 
 // READ
 const initialState = {
   data: [],
   loading: false,
   error: null,
-  status: null,
+  deleteSuccess: false,
 };
 
 const inventarisSlice = createSlice({
@@ -38,7 +38,6 @@ const inventarisSlice = createSlice({
         return {
           ...state,
           loading: true,
-          status: null,
         };
       })
       .addCase(createInventaris.fulfilled, (state, action) => {
@@ -46,21 +45,18 @@ const inventarisSlice = createSlice({
           ...state,
           data: action.payload,
           loading: false,
-          status: 'success',
         };
       })
       .addCase(createInventaris.rejected, (state, action) => {
         return {
           ...state,
-          error: action.payload,
-          status: 'failed',
+          error: 'gagal',
         };
       })
       .addCase(updateInventaris.pending, (state, action) => {
         return {
           ...state,
           loading: true,
-          status: null,
         };
       })
       .addCase(updateInventaris.fulfilled, (state, action) => {
@@ -68,14 +64,12 @@ const inventarisSlice = createSlice({
           ...state,
           data: action.payload,
           loading: false,
-          status: 'success',
         };
       })
       .addCase(updateInventaris.rejected, (state, action) => {
         return {
           ...state,
-          error: action.payload,
-          status: 'failed',
+          error: 'gagal',
         };
       })
       .addCase(deleteInventaris.pending, (state, action) => {
@@ -92,6 +86,27 @@ const inventarisSlice = createSlice({
         };
       })
       .addCase(deleteInventaris.rejected, (state, action) => {
+        return {
+          ...state,
+          error: action.payload,
+        };
+      })
+      .addCase(deleteByYear.pending, (state, action) => {
+        return {
+          ...state,
+          loading: true,
+          error: null,
+        };
+      })
+      .addCase(deleteByYear.fulfilled, (state, action) => {
+        return {
+          ...state,
+          data: action.payload,
+          loading: false,
+          deleteSuccess: true,
+        };
+      })
+      .addCase(deleteByYear.rejected, (state, action) => {
         return {
           ...state,
           error: action.payload,

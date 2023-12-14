@@ -77,6 +77,14 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
   }, [dataEdit]);
 
   // On SUbmit
+  const error = useSelector((state) => state.suratKeluar.error);
+  useEffect(() => {
+    if (error === 'gagal') {
+      setTimeout(() => {
+        window.location.reload();
+      });
+    }
+  }, [error]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { tanggal, nomor_surat, perihal, instansiDituju, penanggungJawab, tanggal_surat, keterangan, dokumen } = formValues;
@@ -213,7 +221,7 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
             <Input name="penanggungJawab" label="Penanggung Jawab" type="text" value={formValues.penanggungJawab || ''} onChange={(e) => setFormValues({ ...formValues, penanggungJawab: e.target.value })} />
             <Input name="keterangan" label="Keterangan Surat" type="text" value={formValues.keterangan || ''} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
             <InputDate label="Tanggal Surat" name="tanggalSurat" value={formValues.tanggal_surat || ''} onChange={(e) => setFormValues({ ...formValues, tanggal_surat: e.target.value })} />
-            <InputFile required={dataEdit ? '' : 'required'} label="Upload Dokumen" name="dokSuratMasuk" onChange={(e) => setFormValues({ ...formValues, dokumen: e.target.files[0] })} />
+            <InputFile accept=".pdf" required={dataEdit ? '' : 'required'} label="Upload Dokumen ( pdf )" name="dokSuratMasuk" onChange={(e) => setFormValues({ ...formValues, dokumen: e.target.files[0] })} />
             {dataEdit && <div className="text-sm text-yellow-500 -mt-3 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
           </div>
           <Button bgColor="bg-cyan-700 py-3" hoverBgColor="hover:bg-cyan-600">

@@ -1,5 +1,4 @@
 import React from 'react';
-import file from '../../../assets/file/Profile.pdf';
 
 const ModalDetail = ({ children }) => {
   return (

@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createPerundanganKep, deletePerundanganKep, getPerundanganKep, updatePerundanganKep } from './thunkPerundanganKep';
+import { createPerundanganKep, deleteByYear, deletePerundanganKep, getPerundanganKep, updatePerundanganKep } from './thunkPerundanganKep';
 
 const initialState = {
   data: [],
   loading: false,
   error: null,
+  deleteSuccess: false,
 };
 
 const perundanganKepSlice = createSlice({
@@ -48,7 +49,7 @@ const perundanganKepSlice = createSlice({
       .addCase(createPerundanganKep.rejected, (state, action) => {
         return {
           ...state,
-          error: action.payload,
+          error: 'gagal',
         };
       })
       .addCase(updatePerundanganKep.pending, (state, action) => {
@@ -67,7 +68,7 @@ const perundanganKepSlice = createSlice({
       .addCase(updatePerundanganKep.rejected, (state, action) => {
         return {
           ...state,
-          error: action.payload,
+          error: 'gagal',
         };
       })
       .addCase(deletePerundanganKep.pending, (state, action) => {
@@ -84,6 +85,27 @@ const perundanganKepSlice = createSlice({
         };
       })
       .addCase(deletePerundanganKep.rejected, (state, action) => {
+        return {
+          ...state,
+          error: action.payload,
+        };
+      })
+      .addCase(deleteByYear.pending, (state, action) => {
+        return {
+          ...state,
+          loading: true,
+          error: null,
+        };
+      })
+      .addCase(deleteByYear.fulfilled, (state, action) => {
+        return {
+          ...state,
+          data: action.payload,
+          loading: false,
+          deleteSuccess: true,
+        };
+      })
+      .addCase(deleteByYear.rejected, (state, action) => {
         return {
           ...state,
           error: action.payload,

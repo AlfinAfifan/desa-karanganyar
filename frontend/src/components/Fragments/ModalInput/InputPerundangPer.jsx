@@ -57,6 +57,14 @@ const InputPerundangPer = ({ idSelected, setIdSelected }) => {
   }, [dataEdit]);
 
   // On SUbmit
+  const error = useSelector((state) => state.perundanganPer.error);
+  useEffect(() => {
+    if (error === 'gagal') {
+      setTimeout(() => {
+        window.location.reload();
+      });
+    }
+  }, [error]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { noPeraturan, tglPenetapan, tentang, tglPengundangan, tambahanLembaran } = formValues;

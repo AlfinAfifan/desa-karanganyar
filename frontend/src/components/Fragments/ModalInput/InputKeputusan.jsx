@@ -66,6 +66,14 @@ const InputKeputusan = ({ setIdSelected, idSelected }) => {
   }, [dataEdit]);
 
   // On SUbmit
+  const error = useSelector((state) => state.keputusan.error);
+  useEffect(() => {
+    if (error === 'gagal') {
+      setTimeout(() => {
+        window.location.reload();
+      });
+    }
+  }, [error]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { tanggalKep, nomorKep, tentang, uraianSingkat, tanggalLapor, nomorLapor, keterangan, dokKeputusan } = formValues;
@@ -133,7 +141,7 @@ const InputKeputusan = ({ setIdSelected, idSelected }) => {
             <TextArea name="uraianSingkat" label="Uraian Singkat" type="text" colSpan="col-span-2" value={formValues.uraianSingkat} onChange={(e) => setFormValues({ ...formValues, uraianSingkat: e.target.value })} />
 
             <Input name="keterangan" label="Keterangan" type="text" value={formValues.keterangan} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
-            <InputFile required={dataEdit ? '' : 'required'} label="Upload Dokumen" name="dokKeputusan" onChange={(e) => setFormValues({ ...formValues, dokKeputusan: e.target.files[0] })} />
+            <InputFile accept=".pdf" required={dataEdit ? '' : 'required'} label="Upload Dokumen ( pdf )" name="dokKeputusan" onChange={(e) => setFormValues({ ...formValues, dokKeputusan: e.target.files[0] })} />
             {dataEdit && <div className="text-sm text-yellow-500 -mt-3 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
           </div>
           <Button bgColor="bg-cyan-700 py-3" hoverBgColor="hover:bg-cyan-600">

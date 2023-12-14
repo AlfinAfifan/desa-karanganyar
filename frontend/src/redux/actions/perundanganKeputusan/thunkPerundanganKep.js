@@ -38,3 +38,14 @@ export const deletePerundanganKep = createAsyncThunk('deletePerundanganKep', asy
     return thunkApi.rejectWithValue(error.response.data); // Gunakan error.response.data jika menggunakan Axios
   }
 });
+
+export const deleteByYear = createAsyncThunk('deleteByYear', async (dataDelete, thunkApi) => {
+  try {
+    await axios.delete(`http://localhost:4000/perundangankepyear/${dataDelete.year}?password=${dataDelete.password}`);
+    const res = await axios.get('http://localhost:4000/perundangankep');
+
+    return res.data;
+  } catch (error) {
+    return thunkApi.rejectWithValue(error.response.data); // Gunakan error.response.data jika menggunakan Axios
+  }
+});

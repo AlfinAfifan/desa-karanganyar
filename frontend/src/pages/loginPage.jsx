@@ -53,11 +53,15 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="bg-[#CEE5FF] h-screen flex justify-center items-center p-6">
-        <div className="bg-white rounded-xl p-10 flex flex-col items-center shadow-md w-full sm:w-auto">
-          {/* <img className="w-[60px] md:w-[120px] mb-10" src={Logo} alt="logo" /> */}
-          <h1 className="text-2xl md:text-4xl mb-10 font-face-ro text-center">Login Admin</h1>
-          <div className="w-full">
+      <div className="bg-gradient-to-r from-slate-200 to-slate-400 h-screen flex justify-center items-center p-6">
+        <div className="bg-white rounded-xl p-10 flex flex-col items-center shadow-md w-full sm:w-auto relative overflow-hidden">
+          <div className="bg-cyan-600 w-full absolute top-0 text-center py-5 text-3xl text-white font-bold">Aplikasi Administrasi Desa Karanganyar</div>
+          <div className="w-full mt-28">
+            <div className="flex whitespace-nowrap items-center gap-2 mb-5 text-cyan-600">
+              <div className="w-full h-0.5 bg-cyan-600"></div>
+              <h1 className="font-semibold text-xl">Silahkan Login</h1>
+              <div className="w-full h-0.5 bg-cyan-600"></div>
+            </div>
             <form onSubmit={formik.handleSubmit}>
               <div className="mb-4 w-full">
                 <div className="relative">
@@ -129,7 +133,7 @@ const LoginPage = () => {
                 </div>
                 {formik.errors.password && formik.touched.password && <p className="mt-1 text-red-500 max-[640px]:text-sm">{formik.errors.password}</p>}
               </div>
-              <button type="submit" className="w-full bg-[#005DB9] rounded-full h-12 text-white">
+              <button type="submit" className="w-full bg-cyan-600 hover:bg-cyan-500 rounded-full h-12 text-white font-semibold mt-8">
                 Login
               </button>
             </form>

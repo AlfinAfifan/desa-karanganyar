@@ -1,41 +1,18 @@
-import React, { useEffect, useRef } from 'react';
-import Card from '../../Elements/Card/Card';
-import { useDispatch, useSelector } from 'react-redux';
-import { getSuratMasuk } from '../../../redux/actions/suratMasuk/thunkSuratMasuk';
-import { countDataByMonth } from '../Chart/FilterMonth';
+import Ilustrasi from '../../../assets/img/ilustrasi.png';
+import { Link } from 'react-router-dom';
 
 const CardDashboard = () => {
-  const dispatch = useDispatch();
-  const data = useSelector((state) => state.suratMasuk.data);
-  // const dataFilter = countDataByMonth(data);
-
-  useEffect(() => {
-    dispatch(getSuratMasuk());
-  }, []);
-
   return (
-    <>
-      <div className="flex justify-between items-center">
-        <div className="text-xl font-medium roboto flex items-center gap-3">Dashboard</div>
-        <div className="form-control">
-          <input onChange={(e) => handleSearch(e.target.value)} type="text" placeholder="Search" className="input border-2 border-slate-600 w-24 md:w-auto h-9" />
-        </div>
+    <div className="flex w-[90%] mx-auto">
+      <div className="flex flex-col w-[50%] justify-center mb-10">
+        <div className="text-4xl font-bold text-cyan-600 mt-3 text-justify leading-snug">Aplikasi Administrasi Desa Karanganyar</div>
+        <p className="mt-7 text-justify">Dengan adanya aplikasi sistem administrasi ini diharapkan bisa mempermudah dalam pengelolaan data, meningkatkan efisiensi serta transparansi dalam tata kelola administrasi desa.</p>
+        <Link to="/suratmasuk" className="mt-16 py-3 px-3 w-36 text-center rounded-full font-medium bg-cyan-600 hover:bg-cyan-700 text-white">
+          Mulai Aplikasi
+        </Link>
       </div>
-      <div className="bg-slate-200 w-full h-0.5 mt-5 rounded-full"></div>
-
-      <div className="flex flex-col gap-12 mt-7">
-        <div className="flex gap-10">
-          <Card>Surat Masuk</Card>
-          <Card />
-          <Card />
-        </div>
-        <div className="flex gap-10">
-          <Card>Surat Masuk</Card>
-          <Card />
-          <Card />
-        </div>
-      </div>
-    </>
+      <img src={Ilustrasi} alt="ilustrasi" className="h-[450px] my-10 mx-auto" />
+    </div>
   );
 };
 

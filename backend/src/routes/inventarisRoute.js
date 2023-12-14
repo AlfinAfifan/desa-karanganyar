@@ -1,5 +1,6 @@
 import express from 'express';
-import { getInventaris, getInventarisById, createInventaris, updateInventaris, deleteInventaris } from '../controller/inventarisController.js';
+import { getInventaris, getInventarisById, createInventaris, updateInventaris, deleteInventaris, deleteDataByYear } from '../controller/inventarisController.js';
+// ROUTER DELETE YEAR
 
 const router = express.Router();
 
@@ -13,5 +14,6 @@ router.post('/inventaris', createInventaris);
 router.patch('/inventaris/:id', updateInventaris);
 // ROUTE DELETE Inventaris
 router.delete('/inventaris/:id', deleteInventaris);
+router.delete('/inventarisyear/:year', deleteDataByYear);
 
 export default router;

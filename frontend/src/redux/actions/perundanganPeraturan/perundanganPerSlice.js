@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createPerundanganPer, deletePerundanganPer, getPerundanganPer, updatePerundanganPer } from './thunkPerundanganPer';
+import { createPerundanganPer, deleteByYear, deletePerundanganPer, getPerundanganPer, updatePerundanganPer } from './thunkPerundanganPer';
 
 const initialState = {
   data: [],
   loading: false,
   error: null,
+  deleteSuccess: false,
 };
 
 const perundanganPerSlice = createSlice({
@@ -48,7 +49,7 @@ const perundanganPerSlice = createSlice({
       .addCase(createPerundanganPer.rejected, (state, action) => {
         return {
           ...state,
-          error: action.payload,
+          error: 'gagal',
         };
       })
       .addCase(updatePerundanganPer.pending, (state, action) => {
@@ -67,7 +68,7 @@ const perundanganPerSlice = createSlice({
       .addCase(updatePerundanganPer.rejected, (state, action) => {
         return {
           ...state,
-          error: action.payload,
+          error: 'gagal',
         };
       })
       .addCase(deletePerundanganPer.pending, (state, action) => {
@@ -84,6 +85,27 @@ const perundanganPerSlice = createSlice({
         };
       })
       .addCase(deletePerundanganPer.rejected, (state, action) => {
+        return {
+          ...state,
+          error: action.payload,
+        };
+      })
+      .addCase(deleteByYear.pending, (state, action) => {
+        return {
+          ...state,
+          loading: true,
+          error: null,
+        };
+      })
+      .addCase(deleteByYear.fulfilled, (state, action) => {
+        return {
+          ...state,
+          data: action.payload,
+          loading: false,
+          deleteSuccess: true,
+        };
+      })
+      .addCase(deleteByYear.rejected, (state, action) => {
         return {
           ...state,
           error: action.payload,

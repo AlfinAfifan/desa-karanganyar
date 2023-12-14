@@ -66,6 +66,15 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
     }
   }, [dataEdit]);
 
+  // HANDLE SUBMIT
+  const error = useSelector((state) => state.inventaris.error);
+  useEffect(() => {
+    if (error === 'gagal') {
+      setTimeout(() => {
+        window.location.reload();
+      });
+    }
+  }, [error]);
   const handleSubmit = (event) => {
     event.preventDefault();
     const { tanggal, namaProyek, volume, biaya, lokasi, keterangan, fotoSebelum, fotoProses, fotoSesudah } = formValues;
@@ -129,15 +138,15 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
             <Input name="lokasi" label="Lokasi" type="text" value={formValues.lokasi} onChange={(e) => setFormValues({ ...formValues, lokasi: e.target.value })} />
             <Input name="keterangan" label="Keterangan" type="text" value={formValues.keterangan} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
             <div>
-              <InputFile required={dataEdit ? '' : 'required'} label="Foto Sebelum" name="fotoSebelum" onChange={(e) => setFormValues({ ...formValues, fotoSebelum: e.target.files[0] })} />
+              <InputFile accept=".jpg, .jpeg, .png" required={dataEdit ? '' : 'required'} label="Foto Sebelum ( jpg, jpeg, png )" name="fotoSebelum" onChange={(e) => setFormValues({ ...formValues, fotoSebelum: e.target.files[0] })} />
               {dataEdit && <div className="text-sm text-yellow-500 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
             </div>
             <div>
-              <InputFile required={dataEdit ? '' : 'required'} label="Foto Proses" name="fotoProses" onChange={(e) => setFormValues({ ...formValues, fotoProses: e.target.files[0] })} />
+              <InputFile accept=".jpg, .jpeg, .png" required={dataEdit ? '' : 'required'} label="Foto Proses ( jpg, jpeg, png )" name="fotoProses" onChange={(e) => setFormValues({ ...formValues, fotoProses: e.target.files[0] })} />
               {dataEdit && <div className="text-sm text-yellow-500 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
             </div>
             <div>
-              <InputFile required={dataEdit ? '' : 'required'} label="Foto Sesudah" name="fotoSesudah" onChange={(e) => setFormValues({ ...formValues, fotoSesudah: e.target.files[0] })} />
+              <InputFile accept=".jpg, .jpeg, .png" required={dataEdit ? '' : 'required'} label="Foto Sesudah ( jpg, jpeg, png )" name="fotoSesudah" onChange={(e) => setFormValues({ ...formValues, fotoSesudah: e.target.files[0] })} />
               {dataEdit && <div className="text-sm text-yellow-500 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
             </div>
           </div>

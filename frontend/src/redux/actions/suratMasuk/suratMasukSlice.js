@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createSuratMasuk, deleteSuratMasuk, getSuratMasuk, updateSuratMasuk } from './thunkSuratMasuk';
+import { createSuratMasuk, deleteByYear, deleteSuratMasuk, getSuratMasuk, updateSuratMasuk } from './thunkSuratMasuk';
 
 const initialState = {
   data: [],
   loading: false,
   error: null,
+  deleteSuccess: false,
 };
 
 const suratMasukSlice = createSlice({
@@ -17,6 +18,7 @@ const suratMasukSlice = createSlice({
         return {
           ...state,
           loading: true,
+          error: null,
         };
       })
       .addCase(getSuratMasuk.fulfilled, (state, action) => {
@@ -24,6 +26,7 @@ const suratMasukSlice = createSlice({
           ...state,
           data: action.payload,
           loading: false,
+          error: null,
         };
       })
       .addCase(getSuratMasuk.rejected, (state, action) => {
@@ -48,7 +51,7 @@ const suratMasukSlice = createSlice({
       .addCase(createSuratMasuk.rejected, (state, action) => {
         return {
           ...state,
-          error: action.payload,
+          error: 'gagal',
         };
       })
       .addCase(updateSuratMasuk.pending, (state, action) => {
@@ -67,7 +70,7 @@ const suratMasukSlice = createSlice({
       .addCase(updateSuratMasuk.rejected, (state, action) => {
         return {
           ...state,
-          error: action.payload,
+          error: 'gagal',
         };
       })
       .addCase(deleteSuratMasuk.pending, (state, action) => {
@@ -84,6 +87,27 @@ const suratMasukSlice = createSlice({
         };
       })
       .addCase(deleteSuratMasuk.rejected, (state, action) => {
+        return {
+          ...state,
+          error: action.payload,
+        };
+      })
+      .addCase(deleteByYear.pending, (state, action) => {
+        return {
+          ...state,
+          loading: true,
+          error: null,
+        };
+      })
+      .addCase(deleteByYear.fulfilled, (state, action) => {
+        return {
+          ...state,
+          data: action.payload,
+          loading: false,
+          deleteSuccess: true,
+        };
+      })
+      .addCase(deleteByYear.rejected, (state, action) => {
         return {
           ...state,
           error: action.payload,

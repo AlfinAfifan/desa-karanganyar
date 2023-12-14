@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Table from '../../Elements/Table/Table';
 import Thead from '../../Elements/Table/Thead';
 import Tr from '../../Elements/Table/Tr';
@@ -6,12 +6,14 @@ import InputInventaris from '../ModalInput/InputInventaris';
 import Button from '../../Elements/Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonIcon from '../../Elements/Button/ButtonIcon';
-import { HiCloudArrowUp, HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash } from 'react-icons/hi2';
+import { HiCloudArrowUp, HiMiniCog6Tooth, HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash, HiTrash } from 'react-icons/hi2';
 import ModalConfirm from '../../Elements/Modal/ModalConfirm';
 import ModalDetail from '../../Elements/Modal/ModalDetail';
-import { deleteInventaris, getInventaris } from '../../../redux/actions/inventaris/thunkInventaris';
+import { deleteByYear, deleteInventaris, getInventaris } from '../../../redux/actions/inventaris/thunkInventaris';
 import { ExportInventaris } from '../Export/ExportInventaris';
 import { toast } from 'react-toastify';
+import Input from '../../Elements/Input/Input';
+import SyncLoader from 'react-spinners/SyncLoader';
 
 const TableInventaris = () => {
   const dispatch = useDispatch();
@@ -92,6 +94,42 @@ const TableInventaris = () => {
     toast.success('Hapus Data Berhasil');
   };
 
+  // FORMAT DATA
+  const [confirmPwd, setConfirmPwd] = useState('');
+  const form = useRef(null);
+  const isError = useSelector((state) => state.inventaris.error);
+  const isSuccess = useSelector((state) => state.inventaris.deleteSuccess);
+
+  const handleDeleteAll = (year) => {
+    dispatch(deleteByYear({ year: year, password: confirmPwd }));
+    form.current.reset();
+  };
+
+  // Notif
+  useEffect(() => {
+    if (isSuccess === true) {
+      toast.success(`Format Data Berhasil`, {
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
+    } else if (isError) {
+      if (isError.message === 'wrong password') {
+        toast.error(`Format Data Gagal`, {
+          autoClose: 2000,
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      }
+    }
+  }, [isSuccess, isError]);
+
+  // LOADING
+  const loading = useSelector((state) => state.inventaris.loading);
+  const color = '#06b6d4';
+
   return (
     <>
       {/* Header */}
@@ -106,8 +144,8 @@ const TableInventaris = () => {
             className="select select-bordered border-slate-600 border-2 max-w-xs select-sm text-base"
           >
             {dropdownYears.map((year) => (
-              <option key={year} value={year.toString()}>
-                {year}
+              <option key={year} value={year?.toString()}>
+                {year ? year : ''}
               </option>
             ))}
           </select>
@@ -123,71 +161,126 @@ const TableInventaris = () => {
         <Button bgColor="bg-cyan-700" hoverBgColor="hover:bg-cyan-600" onClick={() => document.getElementById('my_modal_3').showModal()}>
           Tambah Data
         </Button>
-        <Button onClick={() => ExportInventaris(filteredData, year)} border="border-gray-700 border-2" bgColor="transparent" textColor="text-gray-700" hoverBgColor="hover:bg-gray-700 hover:text-white">
-          <HiCloudArrowUp className="text-2xl" />
-          Export
-        </Button>
+        <button onClick={() => document.getElementById('modalOpsi').showModal()} className="text-gray-700 border-gray-700 border p-2 rounded-full flex items-center justify-center gap-2 font-semibold">
+          <HiMiniCog6Tooth className="text-2xl hover:rotate-90 duration-500" />
+        </button>
+
+        {/* Modal Opsi */}
+        <dialog id="modalOpsi" className="modal">
+          <div className="modal-box w-3/12">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 className="font-bold text-lg text-center">Pilih Opsi</h3>
+            <div className="w-full h-0.5 bg-black cyan-700 my-2 rounded-full"></div>
+            <div className="flex justify-around mt-5">
+              <Button onClick={() => ExportInventaris(filteredData, year)} bgColor="bg-cyan-700" hoverBgColor="hover:bg-cyan-800">
+                <HiCloudArrowUp className="text-xl" />
+                Export
+              </Button>
+              <Button
+                onClick={() => {
+                  document.getElementById('modalOpsi').close(), document.getElementById('modalConfirm').showModal();
+                }}
+                bgColor="bg-red-700"
+                hoverBgColor="hover:bg-red-800"
+              >
+                <HiTrash className="text-xl" />
+                Format
+              </Button>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button>close</button>
+          </form>
+        </dialog>
+
+        {/* Modal Confirm Password */}
+        <dialog id="modalConfirm" className="modal">
+          <div className="modal-box w-3/12">
+            <h3 className="font-bold text-lg text-center">Konfirmasi Password Format Data</h3>
+            <div className="w-full h-0.5 bg-black cyan-700 my-2 rounded-full"></div>
+            <form onSubmit={() => handleDeleteAll(year)} ref={form} method="dialog" className="flex flex-col">
+              <Input name="confirm" type="text" placeholder="Masukkan password anda" onChange={(e) => setConfirmPwd(e.target.value)} />
+              <div className="modal-action flex justify-center gap-8">
+                <Button bgColor="bg-green-600" hoverBgColor="hover:bg-green-700">
+                  Konfirm
+                </Button>
+                <Button onClick={() => document.getElementById('modalConfirm').close()} type="reset" bgColor="bg-gray-400" hoverBgColor="hover:bg-gray-500">
+                  Batal
+                </Button>
+              </div>
+            </form>
+          </div>
+        </dialog>
       </div>
-      <Table>
-        <Thead>
-          <th>No</th>
-          <th>Jenis/Nama Proyek</th>
-          <th>Volume</th>
-          <th>Biaya</th>
-          <th>Lokasi</th>
-          <th>Keterangan</th>
-          <th></th>
-        </Thead>
 
-        <tbody>
-          {filteredData
-            .slice(0)
-            .reverse()
-            .map((datafix, index) => (
-              <Tr key={index}>
-                <td className="font-semibold cursor-pointer">{(index += 1)}</td>
-                <td>{datafix.namaProyek}</td>
-                <td>{datafix.volume}</td>
-                <td>{datafix.biaya.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
-                <td>{datafix.lokasi}</td>
-                <td>{datafix.keterangan}</td>
-                <td className="flex justify-end">
-                  <div className="flex text-2xl">
-                    {/* Hapus */}
-                    <ButtonIcon
-                      hoverBgColor="hover:bg-slate-200"
-                      onClick={() => {
-                        document.getElementById('my_modal_1').showModal(), setIdSelected(datafix.id);
-                      }}
-                    >
-                      <HiOutlineTrash className="text-red-800" />
-                    </ButtonIcon>
+      {/* Loading */}
+      {loading && <SyncLoader color={color} loading={loading} size={25} margin={5} aria-label="Loading Spinner" data-testid="loader" className="w-fit mx-auto py-36" />}
 
-                    {/* Edit */}
-                    <ButtonIcon
-                      hoverBgColor="hover:bg-slate-200"
-                      onClick={() => {
-                        document.getElementById('my_modal_3').showModal(), setIdSelected(datafix.id);
-                      }}
-                    >
-                      <HiOutlinePencilSquare className="text-cyan-800" />
-                    </ButtonIcon>
+      {!loading && (
+        <Table>
+          <Thead>
+            <th>No</th>
+            <th>Jenis/Nama Proyek</th>
+            <th>Volume</th>
+            <th>Biaya</th>
+            <th>Lokasi</th>
+            <th>Keterangan</th>
+            <th></th>
+          </Thead>
 
-                    {/* Detail */}
-                    <ButtonIcon
-                      hoverBgColor="hover:bg-slate-200"
-                      onClick={() => {
-                        document.getElementById('modal_file').showModal(), setIdSelected(datafix.id);
-                      }}
-                    >
-                      <HiOutlineSquare2Stack className="text-yellow-600" />
-                    </ButtonIcon>
-                  </div>
-                </td>
-              </Tr>
-            ))}
-        </tbody>
-      </Table>
+          <tbody>
+            {filteredData
+              .slice(0)
+              .reverse()
+              .map((datafix, index) => (
+                <Tr key={index}>
+                  <td className="font-semibold cursor-pointer">{(index += 1)}</td>
+                  <td>{datafix.namaProyek}</td>
+                  <td>{datafix.volume}</td>
+                  <td>{datafix.biaya?.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })}</td>
+                  <td>{datafix.lokasi}</td>
+                  <td>{datafix.keterangan}</td>
+                  <td className="flex justify-end">
+                    <div className="flex text-2xl">
+                      {/* Hapus */}
+                      <ButtonIcon
+                        hoverBgColor="hover:bg-slate-200"
+                        onClick={() => {
+                          document.getElementById('my_modal_1').showModal(), setIdSelected(datafix.id);
+                        }}
+                      >
+                        <HiOutlineTrash className="text-red-800" />
+                      </ButtonIcon>
+
+                      {/* Edit */}
+                      <ButtonIcon
+                        hoverBgColor="hover:bg-slate-200"
+                        onClick={() => {
+                          document.getElementById('my_modal_3').showModal(), setIdSelected(datafix.id);
+                        }}
+                      >
+                        <HiOutlinePencilSquare className="text-cyan-800" />
+                      </ButtonIcon>
+
+                      {/* Detail */}
+                      <ButtonIcon
+                        hoverBgColor="hover:bg-slate-200"
+                        onClick={() => {
+                          document.getElementById('modal_file').showModal(), setIdSelected(datafix.id);
+                        }}
+                      >
+                        <HiOutlineSquare2Stack className="text-yellow-600" />
+                      </ButtonIcon>
+                    </div>
+                  </td>
+                </Tr>
+              ))}
+          </tbody>
+        </Table>
+      )}
       {/* MODAL */}
       <InputInventaris setIdEdit={setIdSelected} idEdit={idSelected} />
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createPerundanganPer, deletePerundanganPer, getPerundanganPer, getPerundanganPerById, updatePerundanganPer } from '../controller/perundanganPerController.js';
+import { createPerundanganPer, deleteDataByYear, deletePerundanganPer, getPerundanganPer, getPerundanganPerById, updatePerundanganPer } from '../controller/perundanganPerController.js';
 
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.post('/perundanganper', createPerundanganPer);
 router.patch('/perundanganper/:id', updatePerundanganPer);
 // ROUTE DELETE SURAT
 router.delete('/perundanganper/:id', deletePerundanganPer);
+// ROUTER DELETE YEAR
+router.delete('/perundanganperyear/:year', deleteDataByYear);
 
 export default router;

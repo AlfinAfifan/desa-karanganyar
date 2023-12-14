@@ -1,5 +1,5 @@
 import express from 'express';
-import { getSuratKeluar, getSuratKeluarById, createSuratKeluar, updateSuratKeluar, deleteSuratKeluar } from '../controller/suratKeluarController.js';
+import { getSuratKeluar, getSuratKeluarById, createSuratKeluar, updateSuratKeluar, deleteSuratKeluar, deleteDataByYear } from '../controller/suratKeluarController.js';
 
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.post('/suratKeluar', createSuratKeluar);
 router.patch('/suratKeluar/:id', updateSuratKeluar);
 // ROUTE DELETE SURAT
 router.delete('/suratKeluar/:id', deleteSuratKeluar);
+// ROUTER DELETE YEAR
+router.delete('/suratkeluaryear/:year', deleteDataByYear);
 
 export default router;

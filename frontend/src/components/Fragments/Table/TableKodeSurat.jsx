@@ -11,6 +11,7 @@ import { deleteKodeSurat, getKodeSurat } from '../../../redux/actions/kodeSurat/
 import ModalConfirm from '../../Elements/Modal/ModalConfirm';
 import { ExportKodeSurat } from '../Export/ExportKodeSurat';
 import { toast } from 'react-toastify';
+import SyncLoader from 'react-spinners/SyncLoader';
 
 const TableKodeSurat = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,11 @@ const TableKodeSurat = () => {
     dispatch(deleteKodeSurat(id));
     toast.success('Hapus Data Berhasil');
   };
+
+  // LOADING
+  const loading = useSelector((state) => state.kodeSurat.loading);
+  const color = '#06b6d4';
+
   return (
     <>
       {/* Header */}
@@ -64,47 +70,53 @@ const TableKodeSurat = () => {
           Export
         </Button>
       </div>
-      <Table>
-        <Thead>
-          <th>No</th>
-          <th>Kode Surat</th>
-          <th>Keterangan</th>
-          <th></th>
-        </Thead>
 
-        <tbody>
-          {filteredData.map((datafix, index) => (
-            <Tr key={index}>
-              <td className="font-semibold ">{(index += 1)}</td>
-              <td>{datafix.kodeSurat}</td>
-              <td>{datafix.keterangan}</td>
-              <td className="flex justify-end">
-                <div className="flex text-2xl">
-                  {/* Hapus */}
-                  <ButtonIcon
-                    hoverBgColor="hover:bg-slate-200"
-                    onClick={() => {
-                      document.getElementById('my_modal_1').showModal(), setIdSelected(datafix.id);
-                    }}
-                  >
-                    <HiOutlineTrash className="text-red-800" />
-                  </ButtonIcon>
+      {/* Loading */}
+      {loading && <SyncLoader color={color} loading={loading} size={25} margin={5} aria-label="Loading Spinner" data-testid="loader" className="w-fit mx-auto py-36" />}
 
-                  {/* Edit */}
-                  <ButtonIcon
-                    hoverBgColor="hover:bg-slate-200"
-                    onClick={() => {
-                      document.getElementById('my_modal_3').showModal(), setIdSelected(datafix.id);
-                    }}
-                  >
-                    <HiOutlinePencilSquare className="text-cyan-800" />
-                  </ButtonIcon>
-                </div>
-              </td>
-            </Tr>
-          ))}
-        </tbody>
-      </Table>
+      {!loading && (
+        <Table>
+          <Thead>
+            <th>No</th>
+            <th>Kode Surat</th>
+            <th>Keterangan</th>
+            <th></th>
+          </Thead>
+
+          <tbody>
+            {filteredData.map((datafix, index) => (
+              <Tr key={index}>
+                <td className="font-semibold ">{(index += 1)}</td>
+                <td>{datafix.kodeSurat}</td>
+                <td>{datafix.keterangan}</td>
+                <td className="flex justify-end">
+                  <div className="flex text-2xl">
+                    {/* Hapus */}
+                    <ButtonIcon
+                      hoverBgColor="hover:bg-slate-200"
+                      onClick={() => {
+                        document.getElementById('my_modal_1').showModal(), setIdSelected(datafix.id);
+                      }}
+                    >
+                      <HiOutlineTrash className="text-red-800" />
+                    </ButtonIcon>
+
+                    {/* Edit */}
+                    <ButtonIcon
+                      hoverBgColor="hover:bg-slate-200"
+                      onClick={() => {
+                        document.getElementById('my_modal_3').showModal(), setIdSelected(datafix.id);
+                      }}
+                    >
+                      <HiOutlinePencilSquare className="text-cyan-800" />
+                    </ButtonIcon>
+                  </div>
+                </td>
+              </Tr>
+            ))}
+          </tbody>
+        </Table>
+      )}
 
       {/* Modal Input */}
       <InputKodeSurat idSelected={idSelected} setIdSelected={setIdSelected} />

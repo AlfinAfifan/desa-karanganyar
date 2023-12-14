@@ -2,6 +2,9 @@ import peraturanModel from '../models/peraturanModel.js';
 import path from 'path';
 import fs from 'fs';
 import { response } from 'express';
+import usersModel from '../models/usersModel.js';
+import { Op } from 'sequelize';
+import bcrypt from 'bcrypt';
 
 // CONTROLLER GET ALL SURAT
 export const getPeraturan = async (req, res) => {
@@ -193,6 +196,57 @@ export const deletePeraturan = async (req, res) => {
     res.json({
       message: 'Peraturan delete gagal',
       Error: error,
+    });
+  }
+};
+
+export const deleteDataByYear = async (req, res) => {
+  try {
+    // Cocokan password
+    const user = await usersModel.findAll();
+    const match = await bcrypt.compare(req.query.password, user[0].password);
+    if (!match) return res.status(400).json({ message: 'wrong password' });
+
+    // Ambil tahun
+    const year = req.params.year;
+    const startDate = new Date(`${year}-01-01T00:00:00`);
+    const endDate = new Date(`${year}-12-31T23:59:59`);
+
+    // Ambil semua data yang ingin dihapus berdasarkan tahun
+    const dataToDelete = await peraturanModel.findAll({
+      where: {
+        tanggalPer: {
+          [Op.between]: [startDate, endDate],
+        },
+      },
+    });
+
+    // Check if any data is found before attempting deletion
+    if (dataToDelete.length === 0) {
+      return res.status(404).json({ message: 'No data found for the specified year' });
+    }
+
+    // Loop untuk menghapus file dan data di database
+    for (const data of dataToDelete) {
+      const filepath = `./public/Peraturan/${data.fileSurat}`;
+
+      // Hapus file statis
+      fs.promises.unlink(filepath);
+
+      // Hapus data di database
+      await peraturanModel.destroy({
+        where: {
+          id: data.id,
+        },
+      });
+    }
+
+    res.status(200).json({ message: 'Data Deleted Success' });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({
+      message: 'Data delete gagal',
+      error: error.message,
     });
   }
 };
