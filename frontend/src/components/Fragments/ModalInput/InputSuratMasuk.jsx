@@ -6,7 +6,6 @@ import Button from '../../Elements/Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSuratMasuk, updateSuratMasuk } from '../../../redux/actions/suratMasuk/thunkSuratMasuk';
 import { formatDateInput } from '../FormatDate/FormatDateInput';
-import { getKodeSurat } from '../../../redux/actions/kodeSurat/thunkKodeSurat';
 import { toast } from 'react-toastify';
 
 const InputSuratMasuk = ({ idSelected, setIdSelected, year }) => {
@@ -22,8 +21,6 @@ const InputSuratMasuk = ({ idSelected, setIdSelected, year }) => {
   const [formValues, setFormValues] = useState({
     tanggal: '',
     nomor_surat: '',
-    inputKode: '',
-    noUrut: '',
     perihal: '',
     instansiDituju: '',
     penanggungJawab: '',
@@ -39,17 +36,10 @@ const InputSuratMasuk = ({ idSelected, setIdSelected, year }) => {
       setTitle('Edit Data Surat Masuk');
       setCaption('Simpan Perubahan');
 
-      // Split no surat
-      const split = dataEdit.nomor_surat.split('/');
-      const kodeSurat = split[0];
-      const nomorUrut = split[1];
-
       // Jika dataEdit tersedia, atur nilai formValues sesuai dataEdit
       setFormValues({
         tanggal: formatDateInput(dataEdit.tanggal),
         nomor_surat: dataEdit.nomor_surat,
-        inputKode: kodeSurat,
-        noUrut: nomorUrut,
         perihal: dataEdit.perihal,
         instansiDituju: dataEdit.instansiDituju,
         penanggungJawab: dataEdit.penanggungJawab,
@@ -64,8 +54,6 @@ const InputSuratMasuk = ({ idSelected, setIdSelected, year }) => {
       setFormValues({
         tanggal: '',
         nomor_surat: '',
-        inputKode: '',
-        noUrut: '',
         perihal: '',
         instansiDituju: '',
         penanggungJawab: '',
@@ -128,61 +116,6 @@ const InputSuratMasuk = ({ idSelected, setIdSelected, year }) => {
     document.getElementById('my_modal_3').close();
   };
 
-  // OPTION KODE SURAT
-  const [kodeFiltered, setKodeFiltered] = useState([]);
-  const [dropdownActive, setDropdownActive] = useState('');
-
-  const kodeSurat = useSelector((state) => state.kodeSurat.data);
-  const kodeSort = [...kodeSurat].sort((a, b) => {
-    return a.kodeSurat.localeCompare(b.kodeSurat);
-  });
-
-  useEffect(() => {
-    dispatch(getKodeSurat());
-  }, [dispatch]);
-
-  const handleDropdown = (value) => {
-    setFormValues({ ...formValues, inputKode: value });
-
-    const result = kodeSort.filter((kode) => kode.keterangan.toLowerCase().includes(value.toLowerCase()) || kode.kodeSurat.toLowerCase().includes(value.toLowerCase()));
-    setKodeFiltered(result);
-  };
-
-  const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownActive(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dropdownRef]);
-
-  // HANDLE NOMOR SURAT
-  const handleKodeSurat = (kode) => {
-    setFormValues((prev) => {
-      return {
-        ...prev,
-        nomor_surat: `${kode}/${formValues.noUrut}/406.10.2008/${year}`,
-        inputKode: kode,
-      };
-    });
-  };
-
-  const handleNoSurat = (value) => {
-    setFormValues((prevFormValues) => {
-      return {
-        ...prevFormValues,
-        noUrut: value,
-        nomor_surat: `${formValues.inputKode}/${value}/406.10.2008/${year}`,
-      };
-    });
-  };
-
   return (
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box w-6/12 max-w-5xl">
@@ -195,35 +128,22 @@ const InputSuratMasuk = ({ idSelected, setIdSelected, year }) => {
         <h3 className="font-bold text-lg text-cyan-700">{title}</h3>
         <div className="w-full h-0.5 bg-cyan-700 my-2 rounded-full"></div>
 
-        <form action="" ref={form} className="flex flex-col gap-8" onSubmit={handleSubmit}>
+        <form ref={form} action="" className="flex flex-col gap-8" onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-y-4 gap-x-7 mt-3 text-base">
             <InputDate label="Tanggal" name="tanggal" value={formValues.tanggal || ''} onChange={(e) => setFormValues({ ...formValues, tanggal: e.target.value })} />
             <div className="flex flex-col gap-1">
               <label>Hasil Nomor Surat</label>
               <input onChange={() => setFormValues} disabled value={formValues.nomor_surat || ''} className="input font-bold input-bordered border-slate-600 w-full" />
             </div>
-            <div className="relative col-start-1" onClick={() => setDropdownActive(!dropdownActive)}>
-              <Input name="kodeSurat" label="Kode Surat" type="text" placeholder="Cari kode surat" value={formValues.inputKode || ''} onChange={(e) => handleDropdown(e.target.value)} />
-              <div ref={dropdownRef} className={`absolute  w-full mt-2  py-2 rounded-xl ${dropdownActive ? '' : 'hidden'} ${kodeFiltered.length > 0 ? 'bg-slate-200' : 'bg-red-200'}`}>
-                {kodeFiltered.length > 0 ? (
-                  kodeFiltered.map((kode, idx) => (
-                    <div key={idx} onClick={() => handleKodeSurat(kode.kodeSurat)} className="hover:bg-white px-2 py-0.5 mx-2 rounded-lg cursor-pointer">
-                      {kode.keterangan}
-                    </div>
-                  ))
-                ) : (
-                  <div className="px-2 py-0.5 mx-2">Kode Surat Tidak Ditemukan</div>
-                )}
-              </div>
-            </div>
-            <Input name="nomorUrut" label="Nomor Urut Surat" type="text" value={formValues.noUrut || ''} onChange={(e) => handleNoSurat(e.target.value)} />
+
+            <Input name="nomorUrut" label="Nomor Surat" type="text" value={formValues.nomor_surat || ''} onChange={(e) => setFormValues({ ...formValues, nomor_surat: e.target.value })} />
+            <InputDate label="Tanggal Surat" name="tanggalSurat" value={formValues.tanggal_surat || ''} onChange={(e) => setFormValues({ ...formValues, tanggal_surat: e.target.value })} />
             <Input name="perihal" label="Perihal" type="text" value={formValues.perihal || ''} onChange={(e) => setFormValues({ ...formValues, perihal: e.target.value })} />
-            <Input name="instansiDituju" label="Instansi Yang Dituju" type="text" value={formValues.instansiDituju || ''} onChange={(e) => setFormValues({ ...formValues, instansiDituju: e.target.value })} />
+            <Input name="instansiDituju" label="Dari" type="text" value={formValues.instansiDituju || ''} onChange={(e) => setFormValues({ ...formValues, instansiDituju: e.target.value })} />
             <Input name="penanggungJawab" label="Penanggung Jawab" type="text" value={formValues.penanggungJawab || ''} onChange={(e) => setFormValues({ ...formValues, penanggungJawab: e.target.value })} />
             <Input name="keterangan" label="Keterangan Surat" type="text" value={formValues.keterangan || ''} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
-            <InputDate label="Tanggal Surat" name="tanggalSurat" value={formValues.tanggal_surat || ''} onChange={(e) => setFormValues({ ...formValues, tanggal_surat: e.target.value })} />
             <InputFile accept=".pdf" required={dataEdit ? '' : 'required'} label="Upload Dokumen ( pdf )" name="dokSuratMasuk" onChange={(e) => setFormValues({ ...formValues, dokumen: e.target.files[0] })} />
-            {dataEdit && <div className="text-sm text-yellow-500 -mt-3 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
+            {dataEdit && <div className="text-sm text-yellow-500 -mt-3 col-start-1 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
           </div>
           <Button bgColor="bg-cyan-700 py-3" hoverBgColor="hover:bg-cyan-600">
             {caption}

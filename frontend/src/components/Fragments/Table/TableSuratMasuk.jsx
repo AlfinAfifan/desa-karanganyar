@@ -229,7 +229,7 @@ const TableSuratMasuk = () => {
             <th>Tanggal</th>
             <th>Nomor Surat</th>
             <th>Perihal</th>
-            <th>Instansi Dituju</th>
+            <th>Dari</th>
             <th>Penanggung Jawab</th>
             <th>Tanggal Surat</th>
             <th>Keterangan</th>

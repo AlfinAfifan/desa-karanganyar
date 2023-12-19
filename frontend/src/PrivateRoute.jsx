@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import LoginPage from './pages/loginPage';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const PrivateRoute = ({ children }) => {
   const navigate = useNavigate();
@@ -23,21 +23,14 @@ const PrivateRoute = ({ children }) => {
     return false;
   };
 
-  const location = useLocation();
-
-  useEffect(() => {
-    const checkAuthentication = () => {
-      if (!authCheck()) {
-        navigate('/login');
-      } else if (location.pathname === '/' || location.pathname === '/login') {
-        navigate('/dashboard');
-      }
-    };
-
-    checkAuthentication();
-  }, [authCheck, navigate]);
-
-  return authCheck() ? children : <LoginPage />;
+  if (authCheck()) {
+    return children;
+  } else {
+    useEffect(() => {
+      navigate('/');
+    }, [authCheck]);
+  }
+  // return authCheck() ? children : <LoginPage />;
 };
 
 export default PrivateRoute;

@@ -101,7 +101,6 @@ const perundanganKepSlice = createSlice({
         return {
           ...state,
           data: action.payload,
-          loading: false,
           deleteSuccess: true,
         };
       })

@@ -18,6 +18,7 @@ const suratKeluarSlice = createSlice({
         return {
           ...state,
           loading: true,
+          error: null,
         };
       })
       .addCase(getSuratKeluar.fulfilled, (state, action) => {
@@ -25,18 +26,21 @@ const suratKeluarSlice = createSlice({
           ...state,
           data: action.payload,
           loading: false,
+          error: null,
         };
       })
       .addCase(getSuratKeluar.rejected, (state, action) => {
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(createSuratKeluar.pending, (state, action) => {
         return {
           ...state,
           loading: true,
+          error: null,
         };
       })
       .addCase(createSuratKeluar.fulfilled, (state, action) => {
@@ -44,6 +48,7 @@ const suratKeluarSlice = createSlice({
           ...state,
           data: action.payload,
           loading: false,
+          error: null,
         };
       })
       .addCase(createSuratKeluar.rejected, (state, action) => {
@@ -75,6 +80,7 @@ const suratKeluarSlice = createSlice({
         return {
           ...state,
           loading: true,
+          error: null,
         };
       })
       .addCase(deleteSuratKeluar.fulfilled, (state, action) => {
@@ -82,12 +88,14 @@ const suratKeluarSlice = createSlice({
           ...state,
           data: action.payload,
           loading: false,
+          error: null,
         };
       })
       .addCase(deleteSuratKeluar.rejected, (state, action) => {
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(deleteByYear.pending, (state, action) => {
@@ -101,8 +109,8 @@ const suratKeluarSlice = createSlice({
         return {
           ...state,
           data: action.payload,
-          loading: false,
           deleteSuccess: true,
+          error: null,
         };
       })
       .addCase(deleteByYear.rejected, (state, action) => {

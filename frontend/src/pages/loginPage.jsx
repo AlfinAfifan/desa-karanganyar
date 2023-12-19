@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
+import Image from '../assets/img/not-found.jpg';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -33,6 +34,7 @@ const LoginPage = () => {
         toast.error('Gagal Login !');
       }
     } catch (error) {
+      setIsLoginError(true);
       console.log(error);
     }
   };
@@ -145,14 +147,14 @@ const LoginPage = () => {
         <div className="fixed w-full h-full inset-0 z-50 bg-black/[.15] backdrop-blur-[2px] overflow-hidden flex justify-center items-center">
           <div className={`w-[450px] bg-white rounded-3xl px-4 py-6`}>
             <div className="w-full mx-auto mb-4">
-              <img src={''} alt="Modal Image" />
+              <img src={Image} alt="Modal Image" className="h-32 mx-auto" />
             </div>
 
             <p className="mb-4 px-8 text-center font-face-ro">
-              <span className="text-lg font-semibold block mb-1">Login Gagal</span>
+              <span className="text-2xl font-bold text-red-600 block mb-1">Login Gagal</span>
               Silahkan cek kembali Email dan password yang kamu masukan
             </p>
-            <button onClick={() => setIsLoginError(false)} className="p-[15px] w-full rounded-full bg-[#005DB9] font-face-ro text-white hover:bg-blue-800">
+            <button onClick={() => setIsLoginError(false)} className="p-[15px] w-full rounded-full bg-red-600 font-face-ro text-white hover:bg-red-700">
               Close
             </button>
           </div>

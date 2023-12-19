@@ -23,7 +23,8 @@ function App() {
       <BrowserRouter>
         <ToastContainer autoClose={3000} />
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
+          <Route path="*" element={<NotFoundPage />} />
           <Route
             element={
               <PrivateRoute>
@@ -31,7 +32,6 @@ function App() {
               </PrivateRoute>
             }
           >
-            <Route path="*" element={<NotFoundPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/suratmasuk" element={<SuratMasukPage />} />
             <Route path="/suratkeluar" element={<SuratKeluarPage />} />

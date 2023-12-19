@@ -24,6 +24,7 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
     nomor_surat: '',
     inputKode: '',
     noUrut: '',
+    yearInput: '',
     perihal: '',
     instansiDituju: '',
     penanggungJawab: '',
@@ -43,6 +44,7 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
       const split = dataEdit.nomor_surat.split('/');
       const kodeSurat = split[0];
       const nomorUrut = split[1];
+      const yearInput = split[3];
 
       // Jika dataEdit tersedia, atur nilai formValues sesuai dataEdit
       setFormValues({
@@ -50,6 +52,7 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
         nomor_surat: dataEdit.nomor_surat,
         inputKode: kodeSurat,
         noUrut: nomorUrut,
+        yearInput: yearInput,
         perihal: dataEdit.perihal,
         instansiDituju: dataEdit.instansiDituju,
         penanggungJawab: dataEdit.penanggungJawab,
@@ -163,21 +166,35 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
 
   // HANDLE NOMOR SURAT
   const handleKodeSurat = (kode) => {
+    const yearInput = new Date(formValues.yearInput).getFullYear();
     setFormValues((prev) => {
       return {
         ...prev,
-        nomor_surat: `${kode}/${formValues.noUrut}/406.10.2008/${year}`,
+        nomor_surat: `${kode}/${formValues.noUrut}/406.10.2008/${yearInput ? yearInput : 'tahun'}`,
         inputKode: kode,
       };
     });
   };
 
   const handleNoSurat = (value) => {
+    const yearInput = new Date(formValues.yearInput).getFullYear();
     setFormValues((prevFormValues) => {
       return {
         ...prevFormValues,
         noUrut: value,
-        nomor_surat: `${formValues.inputKode}/${value}/406.10.2008/${year}`,
+        nomor_surat: `${formValues.inputKode}/${value}/406.10.2008/${yearInput ? yearInput : 'tahun'}`,
+      };
+    });
+  };
+
+  // HANDLE YEAR INPUT
+  const handleYearInput = (date) => {
+    const yearInput = new Date(date).getFullYear();
+    setFormValues((prevFormValues) => {
+      return {
+        ...prevFormValues,
+        yearInput: date,
+        nomor_surat: `${formValues.inputKode}/${formValues.noUrut}/406.10.2008/${yearInput}`,
       };
     });
   };
@@ -201,7 +218,7 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
               <label>Hasil Nomor Surat</label>
               <input onChange={() => setFormValues} disabled value={formValues.nomor_surat || ''} className="input font-bold input-bordered border-slate-600 w-full" />
             </div>
-            <div className="relative col-start-1" onClick={() => setDropdownActive(!dropdownActive)}>
+            <div className="relative " onClick={() => setDropdownActive(!dropdownActive)}>
               <Input name="kodeSurat" label="Kode Surat" type="text" placeholder="Cari kode surat" value={formValues.inputKode || ''} onChange={(e) => handleDropdown(e.target.value)} />
               <div ref={dropdownRef} className={`absolute  w-full mt-2  py-2 rounded-xl ${dropdownActive ? '' : 'hidden'} ${kodeFiltered.length > 0 ? 'bg-slate-200' : 'bg-red-200'}`}>
                 {kodeFiltered.length > 0 ? (
@@ -216,11 +233,19 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
               </div>
             </div>
             <Input name="nomorUrut" label="Nomor Urut Surat" type="text" value={formValues.noUrut || ''} onChange={(e) => handleNoSurat(e.target.value)} />
+            <InputDate
+              label="Tanggal Surat"
+              name="tanggalSurat"
+              value={formValues.tanggal_surat || ''}
+              onChange={(e) => {
+                setFormValues({ ...formValues, tanggal_surat: e.target.value });
+                handleYearInput(e.target.value);
+              }}
+            />
             <Input name="perihal" label="Perihal" type="text" value={formValues.perihal || ''} onChange={(e) => setFormValues({ ...formValues, perihal: e.target.value })} />
             <Input name="instansiDituju" label="Instansi Yang Dituju" type="text" value={formValues.instansiDituju || ''} onChange={(e) => setFormValues({ ...formValues, instansiDituju: e.target.value })} />
             <Input name="penanggungJawab" label="Penanggung Jawab" type="text" value={formValues.penanggungJawab || ''} onChange={(e) => setFormValues({ ...formValues, penanggungJawab: e.target.value })} />
             <Input name="keterangan" label="Keterangan Surat" type="text" value={formValues.keterangan || ''} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
-            <InputDate label="Tanggal Surat" name="tanggalSurat" value={formValues.tanggal_surat || ''} onChange={(e) => setFormValues({ ...formValues, tanggal_surat: e.target.value })} />
             <InputFile accept=".pdf" required={dataEdit ? '' : 'required'} label="Upload Dokumen ( pdf )" name="dokSuratMasuk" onChange={(e) => setFormValues({ ...formValues, dokumen: e.target.files[0] })} />
             {dataEdit && <div className="text-sm text-yellow-500 -mt-3 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
           </div>

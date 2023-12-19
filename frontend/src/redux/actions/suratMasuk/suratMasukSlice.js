@@ -103,7 +103,6 @@ const suratMasukSlice = createSlice({
         return {
           ...state,
           data: action.payload,
-          loading: false,
           deleteSuccess: true,
         };
       })

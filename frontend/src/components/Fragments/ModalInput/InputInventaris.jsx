@@ -134,7 +134,7 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
             <InputDate label="Tanggal Inventaris" name="tanggalInv" value={formValues.tanggal} onChange={(e) => setFormValues({ ...formValues, tanggal: e.target.value })} />
             <Input name="namaProyek" label="Jenis / Nama Proyek" type="text" value={formValues.namaProyek} onChange={(e) => setFormValues({ ...formValues, namaProyek: e.target.value })} />
             <Input name="volume" label="Volume" type="text" value={formValues.volume} onChange={(e) => setFormValues({ ...formValues, volume: e.target.value })} />
-            <Input name="biaya" label="Biaya" type="number" value={formValues.biaya} onChange={(e) => setFormValues({ ...formValues, biaya: e.target.value })} />
+            <Input name="biaya" label="Biaya (Rp. )" type="number" value={formValues.biaya} onChange={(e) => setFormValues({ ...formValues, biaya: e.target.value })} />
             <Input name="lokasi" label="Lokasi" type="text" value={formValues.lokasi} onChange={(e) => setFormValues({ ...formValues, lokasi: e.target.value })} />
             <Input name="keterangan" label="Keterangan" type="text" value={formValues.keterangan} onChange={(e) => setFormValues({ ...formValues, keterangan: e.target.value })} />
             <div>

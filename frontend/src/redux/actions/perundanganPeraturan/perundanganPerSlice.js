@@ -101,7 +101,6 @@ const perundanganPerSlice = createSlice({
         return {
           ...state,
           data: action.payload,
-          loading: false,
           deleteSuccess: true,
         };
       })
