@@ -1,6 +1,7 @@
 import React from 'react';
 import ModalLogout from '../Modal/ModalLogout';
 import { useNavigate } from 'react-router-dom';
+import logo from '../../../assets/img/logo1.png';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -20,6 +21,10 @@ const Navbar = () => {
       <div className="flex-1">
         <h1 className="text-2xl font-medium roboto">Administrasi Desa Karanganyar</h1>
       </div>
+      <a href="https://www.instagram.com/foreach_id?igshid=OGQ5ZDc2ODk2ZA==" target="_blank" className="flex bg-cyan-600 w-fit p-2 rounded-lg text-white text-sm items-center mr-7 gap-3 font-medium">
+        <p>Developed by: </p>
+        <img src={logo} alt="" className="w-16" />
+      </a>
       <div className="flex-none gap-2">
         <div className="dropdown dropdown-end">
           <label tabIndex={0} className="btn btn-ghost btn-circle avatar">

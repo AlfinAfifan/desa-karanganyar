@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { HiClipboardDocumentList, HiDocumentText, HiEnvelope, HiEnvelopeOpen, HiHome, HiMiniBuildingOffice2, HiMiniChevronDown, HiMiniKey } from 'react-icons/hi2';
 import { FaArrowLeft } from 'react-icons/fa6';
-import logo from '../../../assets/img/logo1.png';
-import logoKecil from '../../../assets/img/logo2.png';
+import logoPemkab from '../../../assets/img/logo-pemkab.png';
 
 const SidebarElement = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -42,11 +41,20 @@ const SidebarElement = () => {
 
   return (
     <div className={`bg-cyan-800 h-screen flex flex-col gap-3 roboto text-white sticky top-0 duration-500 z-50 ${isOpen ? 'w-28 px-6' : 'w-72 px-3'}`}>
-      <a href="#" className="font-semibold normal-case my-6 flex justify-center">
-        {isOpen ? <img src={logoKecil} alt="" className="w-32" /> : <img src={logo} alt="" className="w-40" />}
+      <a href="#" className="font-bold normal-case my-6 flex justify-center gap-2 items-center">
+        <img src={logoPemkab} alt="" className="w-14" />
+        <div className="font-medium ">
+          {isOpen ? (
+            ''
+          ) : (
+            <div className="flex flex-col">
+              <div className="text-2xl tracking-widest"> Pemerintah </div> <div className="whitespace-nowrap text-lg">Desa Karanganyar</div>
+            </div>
+          )}
+        </div>
       </a>
 
-      <div className={`rounded-full py-0.5 flex justify-center text-sm font-semibold bg-white opacity-50 mt-3 mb-2 text-cyan-800 ${isOpen ? 'mx-2' : 'mx-4'}`}>{isOpen ? '' : 'Persuratan'}</div>
+      <div className={`rounded-full py-0.5 flex justify-center text-sm font-semibold bg-white opacity-50 mt-1 mb-2 text-cyan-800 ${isOpen ? 'mx-2' : 'mx-4'}`}>{isOpen ? '' : 'Persuratan'}</div>
 
       <NavLink to="/dashboard">
         {({ isActive }) => (
