@@ -6,8 +6,8 @@ POST http://localhost:4000/users
 Content-Type: application/json
 
 {
-    "name": "haqqirizki",
-    "email": "haqqirizki@gmail.com",
+    "name": "operatordesa",
+    "email": "operatordesa@gmail.com",
     "password" : "karanganyar01",
     "confirmPassword": "karanganyar01"
 }

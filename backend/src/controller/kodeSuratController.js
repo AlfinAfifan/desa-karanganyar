@@ -1,12 +1,10 @@
-import kodeSuratModel from '../models/kodeSuratModel.js';
-import path from 'path';
-import fs from 'fs';
-import { response } from 'express';
-import usersModel from '../models/usersModel.js';
+const kodeSuratModel = require('../models/kodeSuratModel.js');
+const { response } = require('express');
+const usersModel = require('../models/usersModel.js');
 
 // CONTROLLER GET ALL SURAT
 
-export const getKodeSurat = async (req, res) => {
+exports.getKodeSurat = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -27,7 +25,7 @@ export const getKodeSurat = async (req, res) => {
 };
 
 // CONTROLLER GET SURAT BY ID
-export const getKodeSuratById = async (req, res) => {
+exports.getKodeSuratById = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -51,7 +49,7 @@ export const getKodeSuratById = async (req, res) => {
 };
 
 // CONTROLLER CREATE SURAT
-export const createKodeSurat = async (req, res) => {
+exports.createKodeSurat = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -82,7 +80,7 @@ export const createKodeSurat = async (req, res) => {
 };
 
 // CONTROLLER UPDATdataK SURAT
-export const updateKodeSurat = async (req, res) => {
+exports.updateKodeSurat = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -131,7 +129,7 @@ export const updateKodeSurat = async (req, res) => {
 };
 
 // CONTROLLER DELETE SURAT
-export const deleteKodeSurat = async (req, res) => {
+exports.deleteKodeSurat = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);

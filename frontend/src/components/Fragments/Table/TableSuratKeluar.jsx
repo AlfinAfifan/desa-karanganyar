@@ -13,9 +13,9 @@ import { deleteByYear, deleteSuratKeluar, getSuratKeluar } from '../../../redux/
 import InputSuratKeluar from '../ModalInput/InputSuratKeluar';
 import { formatDate } from '../FormatDate/FormatDate';
 import { ExportSuratKeluar } from '../Export/ExportSuratKeluar';
-import { toast } from 'react-toastify';
 import Input from '../../Elements/Input/Input';
 import SyncLoader from 'react-spinners/SyncLoader';
+import { Link } from 'react-router-dom';
 
 const TableSuratKeluar = () => {
   const dispatch = useDispatch();
@@ -93,7 +93,6 @@ const TableSuratKeluar = () => {
   // DELETE DATA
   const handleDelete = (id) => {
     dispatch(deleteSuratKeluar(id));
-    toast.success('Hapus Data Berhasil');
   };
 
   // FORMAT DATA
@@ -106,25 +105,6 @@ const TableSuratKeluar = () => {
     dispatch(deleteByYear({ year: year, password: confirmPwd }));
     form.current.reset();
   };
-
-  // Notif
-  useEffect(() => {
-    if (isSuccess === true) {
-      toast.success(`Format Data Berhasil`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } else if (isError) {
-      toast.error(`Format Data Gagal`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
-  }, [isSuccess, isError]);
 
   // LOADING
   const loading = useSelector((state) => state.suratKeluar.loading);
@@ -270,13 +250,10 @@ const TableSuratKeluar = () => {
                       </ButtonIcon>
 
                       {/* Detail */}
-                      <ButtonIcon
-                        hoverBgColor="hover:bg-slate-200"
-                        onClick={() => {
-                          document.getElementById('modal_file').showModal(), setUrlSelected(datafix.url);
-                        }}
-                      >
-                        <HiOutlineSquare2Stack className="text-yellow-600" />
+                      <ButtonIcon hoverBgColor="hover:bg-slate-200">
+                        <a href={datafix.url} target="_blank">
+                          <HiOutlineSquare2Stack className="text-yellow-600" />
+                        </a>
                       </ButtonIcon>
                     </div>
                   </td>
@@ -287,11 +264,6 @@ const TableSuratKeluar = () => {
       )}
       {/* Modal Input */}
       <InputSuratKeluar idSelected={idSelected} setIdSelected={setIdSelected} year={year} />
-
-      {/* Modal PDF */}
-      <ModalDetail>
-        <PdfViewer url={urlSelected} />
-      </ModalDetail>
 
       <ModalConfirm title="Konfirmasi Hapus!" onClick={() => handleDelete(idSelected)}>
         Yakin untuk menghapus data ini ?

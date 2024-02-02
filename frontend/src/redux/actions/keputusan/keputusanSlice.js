@@ -31,6 +31,7 @@ const keputusanSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(createKeputusan.pending, (state, action) => {
@@ -50,6 +51,7 @@ const keputusanSlice = createSlice({
         return {
           ...state,
           error: 'gagal',
+          loading: false,
         };
       })
       .addCase(updateKeputusan.pending, (state, action) => {
@@ -69,6 +71,7 @@ const keputusanSlice = createSlice({
         return {
           ...state,
           error: 'gagal',
+          loading: false,
         };
       })
       .addCase(deleteKeputusan.pending, (state, action) => {
@@ -88,6 +91,7 @@ const keputusanSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(deleteByYear.pending, (state, action) => {
@@ -108,6 +112,7 @@ const keputusanSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       });
   },

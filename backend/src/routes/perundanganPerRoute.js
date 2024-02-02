@@ -1,5 +1,5 @@
-import express from 'express';
-import { createPerundanganPer, deleteDataByYear, deletePerundanganPer, getPerundanganPer, getPerundanganPerById, updatePerundanganPer } from '../controller/perundanganPerController.js';
+const express = require('express');
+const { createPerundanganPer, deleteDataByYear, deletePerundanganPer, getPerundanganPer, getPerundanganPerById, updatePerundanganPer } = require('../controller/perundanganPerController.js');
 
 const router = express.Router();
 
@@ -16,4 +16,4 @@ router.delete('/perundanganper/:id', deletePerundanganPer);
 // ROUTER DELETE YEAR
 router.delete('/perundanganperyear/:year', deleteDataByYear);
 
-export default router;
+module.exports = router;

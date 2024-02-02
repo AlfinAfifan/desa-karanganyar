@@ -1,5 +1,5 @@
-import { Sequelize } from 'sequelize';
-import db from '../config/database.js';
+const { Sequelize } = require('sequelize');
+const db = require('../config/database.js');
 
 const { DataTypes } = Sequelize;
 
@@ -17,7 +17,7 @@ const perundanganPerModel = db.define(
   }
 );
 
-export default perundanganPerModel;
+module.exports = perundanganPerModel;
 
 (async () => {
   await db.sync();

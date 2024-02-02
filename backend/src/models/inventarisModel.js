@@ -1,7 +1,5 @@
-import { Sequelize } from 'sequelize';
-import db from '../config/database.js';
-
-const { DataTypes } = Sequelize;
+const { DataTypes } = require('sequelize');
+const db = require('../config/database.js');
 
 const inventarisModel = db.define(
   'inventaris',
@@ -24,8 +22,9 @@ const inventarisModel = db.define(
   }
 );
 
-export default inventarisModel;
+module.exports = inventarisModel;
 
+// Menjalankan sinkronisasi basis data (opsional)
 (async () => {
   await db.sync();
 })();

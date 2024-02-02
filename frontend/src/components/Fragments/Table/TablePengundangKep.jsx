@@ -74,7 +74,6 @@ const TablePengundangKep = () => {
   // DELETE DATA
   const handleDelete = (id) => {
     dispatch(deletePerundanganKep(id));
-    toast.success('Hapus Data Berhasil');
   };
 
   // FORMAT DATA
@@ -87,25 +86,6 @@ const TablePengundangKep = () => {
     dispatch(deleteByYear({ year: year, password: confirmPwd }));
     form.current.reset();
   };
-
-  // Notif
-  useEffect(() => {
-    if (isSuccess === true) {
-      toast.success(`Format Data Berhasil`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } else if (isError) {
-      toast.error(`Format Data Gagal`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
-  }, [isSuccess, isError]);
 
   // LOADING
   const loading = useSelector((state) => state.perundanganKep.loading);

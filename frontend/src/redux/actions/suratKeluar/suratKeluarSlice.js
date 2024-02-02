@@ -55,6 +55,7 @@ const suratKeluarSlice = createSlice({
         return {
           ...state,
           error: 'gagal',
+          loading: false,
         };
       })
       .addCase(updateSuratKeluar.pending, (state, action) => {
@@ -74,6 +75,7 @@ const suratKeluarSlice = createSlice({
         return {
           ...state,
           error: 'gagal',
+          loading: false,
         };
       })
       .addCase(deleteSuratKeluar.pending, (state, action) => {
@@ -117,6 +119,7 @@ const suratKeluarSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       });
   },

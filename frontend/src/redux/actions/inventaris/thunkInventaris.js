@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const getInventaris = createAsyncThunk('getInventaris', async () => {
   const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/inventaris`, {
@@ -17,8 +18,10 @@ export const createInventaris = createAsyncThunk('inputInventaris', async (dataI
       withCredentials: true,
     });
 
+    toast.success('Tambah Data Sukses');
     return res.data;
   } catch (error) {
+    toast.error(error.response.data.message);
     return thunkApi.rejectWithValue(error.res.data);
   }
 });
@@ -32,8 +35,10 @@ export const updateInventaris = createAsyncThunk('updateInventaris', async (data
       withCredentials: true,
     });
 
+    toast.success('Edit Data Sukses');
     return res.data;
   } catch (error) {
+    toast.error(error.response.data.message);
     return thunkApi.rejectWithValue(error.res.data);
   }
 });
@@ -47,8 +52,10 @@ export const deleteInventaris = createAsyncThunk('deleteInventaris', async (id, 
       withCredentials: true,
     });
 
+    toast.success('Hapus Data Sukses');
     return res.data;
   } catch (error) {
+    toast.error(error.response.data.message);
     return thunkApi.rejectWithValue(error.response.data); // Gunakan error.response.data jika menggunakan Axios
   }
 });
@@ -62,8 +69,10 @@ export const deleteByYear = createAsyncThunk('deleteByYear', async (dataDelete, 
       withCredentials: true,
     });
 
+    toast.success('Format Data Sukses');
     return res.data;
   } catch (error) {
+    toast.error(error.response.data.message);
     return thunkApi.rejectWithValue(error.response.data); // Gunakan error.response.data jika menggunakan Axios
   }
 });

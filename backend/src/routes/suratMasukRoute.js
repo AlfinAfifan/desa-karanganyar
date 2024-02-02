@@ -1,19 +1,19 @@
-import express from 'express';
-import { getSuratMasuk, getSuratMasukById, createSuratMasuk, updateSuratMasuk, deleteSuratMasuk, deleteDataByYear } from '../controller/suratMasukController.js';
+const express = require('express');
+const suratMasukController = require('../controller/suratMasukController.js');
 
 const router = express.Router();
 
 // ROUTE GET ALL SURAT
-router.get('/suratmasuk', getSuratMasuk);
+router.get('/suratmasuk', suratMasukController.getSuratMasuk);
 // ROUTE GET SURAT BY ID
-router.get('/suratmasuk/:id', getSuratMasukById);
+router.get('/suratmasuk/:id', suratMasukController.getSuratMasukById);
 // ROUTE CREATE SURAT
-router.post('/suratmasuk', createSuratMasuk);
+router.post('/suratmasuk', suratMasukController.createSuratMasuk);
 // ROUTE EDIT SURAT
-router.patch('/suratmasuk/:id', updateSuratMasuk);
+router.patch('/suratmasuk/:id', suratMasukController.updateSuratMasuk);
 // ROUTE DELETE SURAT
-router.delete('/suratmasuk/:id', deleteSuratMasuk);
+router.delete('/suratmasuk/:id', suratMasukController.deleteSuratMasuk);
 // ROUTER DELETE YEAR
-router.delete('/suratmasukyear/:year', deleteDataByYear);
+router.delete('/suratmasukyear/:year', suratMasukController.deleteDataByYear);
 
-export default router;
+module.exports = router;

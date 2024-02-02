@@ -74,7 +74,6 @@ const TablePerundanganPer = () => {
   // DELETE DATA
   const handleDelete = (id) => {
     dispatch(deletePerundanganPer(id));
-    toast.success('Hapus Data Berhasil');
   };
 
   // FORMAT DATA
@@ -88,24 +87,6 @@ const TablePerundanganPer = () => {
     form.current.reset();
   };
 
-  // Notif
-  useEffect(() => {
-    if (isSuccess === true) {
-      toast.success(`Format Data Berhasil`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } else if (isError) {
-      toast.error(`Format Data Gagal`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
-  }, [isSuccess, isError]);
   // LOADING
   const loading = useSelector((state) => state.perundanganPer.loading);
   const color = '#06b6d4';

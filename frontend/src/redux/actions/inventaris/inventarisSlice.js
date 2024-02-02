@@ -32,6 +32,7 @@ const inventarisSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(createInventaris.pending, (state, action) => {
@@ -51,6 +52,7 @@ const inventarisSlice = createSlice({
         return {
           ...state,
           error: 'gagal',
+          loading: false,
         };
       })
       .addCase(updateInventaris.pending, (state, action) => {
@@ -70,6 +72,7 @@ const inventarisSlice = createSlice({
         return {
           ...state,
           error: 'gagal',
+          loading: false,
         };
       })
       .addCase(deleteInventaris.pending, (state, action) => {
@@ -89,6 +92,7 @@ const inventarisSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(deleteByYear.pending, (state, action) => {
@@ -109,6 +113,7 @@ const inventarisSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       });
   },

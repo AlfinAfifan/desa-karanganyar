@@ -1,28 +1,33 @@
-import { Sequelize } from 'sequelize';
-import db from '../config/database.js';
+// Gunakan require untuk mengimpor modul
+const { Sequelize, DataTypes } = require('sequelize');
+const db = require('../config/database.js');
 
-const { DataTypes } = Sequelize;
+// Ekstrak objek DataTypes dari Sequelize
+const { DATE, STRING } = DataTypes;
 
+// Definisikan model menggunakan define
 const keputusanModel = db.define(
   'keputusan',
   {
-    tanggalKep: DataTypes.DATE,
-    nomorKep: DataTypes.STRING,
-    tentang: DataTypes.STRING,
-    uraianSingkat: DataTypes.STRING,
-    tanggalLapor: DataTypes.DATE,
-    nomorLapor: DataTypes.STRING,
-    keterangan: DataTypes.STRING,
-    fileSurat: DataTypes.STRING,
-    url: DataTypes.STRING,
+    tanggalKep: DATE,
+    nomorKep: STRING,
+    tentang: STRING,
+    uraianSingkat: STRING,
+    tanggalLapor: DATE,
+    nomorLapor: STRING,
+    keterangan: STRING,
+    fileSurat: STRING,
+    url: STRING,
   },
   {
     freezeTableName: true,
   }
 );
 
-export default keputusanModel;
+// Ekspor model keputusan
+module.exports = keputusanModel;
 
+// Sinkronkan database saat aplikasi berjalan
 (async () => {
   await db.sync();
 })();

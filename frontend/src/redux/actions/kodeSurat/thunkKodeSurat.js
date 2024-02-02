@@ -1,5 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export const getKodeSurat = createAsyncThunk('getKodeSurat', async () => {
   const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/kodesurat`, {
@@ -17,8 +18,10 @@ export const createKodeSurat = createAsyncThunk('createKodeSurat', async (dataIn
       withCredentials: true,
     });
 
+    toast.success('Tambah Data Sukses');
     return res.data;
   } catch (error) {
+    toast.error(error.response.data.message);
     return thunkApi.rejectWithValue(error.res.data);
   }
 });
@@ -32,8 +35,10 @@ export const updateKodeSurat = createAsyncThunk('updateKodeSurat', async (dataUp
       withCredentials: true,
     });
 
+    toast.success('Edit Data Sukses');
     return res.data;
   } catch (error) {
+    toast.error(error.response.data.message);
     return thunkApi.rejectWithValue(error.res.data);
   }
 });
@@ -47,8 +52,10 @@ export const deleteKodeSurat = createAsyncThunk('deleteKodeSurat', async (id, th
       withCredentials: true,
     });
 
+    toast.success('Hapus Data Sukses');
     return res.data;
   } catch (error) {
+    toast.error(error.response.data.message);
     return thunkApi.rejectWithValue(error.response.data); // Gunakan error.response.data jika menggunakan Axios
   }
 });

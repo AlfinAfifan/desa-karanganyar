@@ -33,6 +33,7 @@ const suratMasukSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(createSuratMasuk.pending, (state, action) => {
@@ -52,6 +53,7 @@ const suratMasukSlice = createSlice({
         return {
           ...state,
           error: 'gagal',
+          loading: false,
         };
       })
       .addCase(updateSuratMasuk.pending, (state, action) => {
@@ -71,6 +73,7 @@ const suratMasukSlice = createSlice({
         return {
           ...state,
           error: 'gagal',
+          loading: false,
         };
       })
       .addCase(deleteSuratMasuk.pending, (state, action) => {
@@ -90,6 +93,7 @@ const suratMasukSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(deleteByYear.pending, (state, action) => {
@@ -110,6 +114,7 @@ const suratMasukSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       });
   },

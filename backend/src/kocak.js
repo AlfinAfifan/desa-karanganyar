@@ -1,17 +1,17 @@
-import express from 'express';
-import FileUpload from 'express-fileupload';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
-import suratMasukRoute from './routes/suratMasukRoute.js';
-import suratKeluarRoute from './routes/suratKeluarRoute.js';
-import usersRoute from './routes/usersRoute.js';
-import inventarisRoute from './routes/inventarisRoute.js';
-import keputusanRoute from './routes/keputusanRoute.js';
-import peraturanRoute from './routes/peraturanRoute.js';
-import kodeSuratRoute from './routes/kodeSuratRoute.js';
-import perundanganKepRoute from './routes/perundanganKepRoute.js';
-import perundanganPerRoute from './routes/perundanganPerRoute.js';
-import dotenv from 'dotenv';
+const express = require('express');
+const FileUpload = require('express-fileupload');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const suratMasukRoute = require('./routes/suratMasukRoute.js');
+const suratKeluarRoute = require('./routes/suratKeluarRoute.js');
+const usersRoute = require('./routes/usersRoute.js');
+const inventarisRoute = require('./routes/inventarisRoute.js');
+const keputusanRoute = require('./routes/keputusanRoute.js');
+const peraturanRoute = require('./routes/peraturanRoute.js');
+const kodeSuratRoute = require('./routes/kodeSuratRoute.js');
+const perundanganKepRoute = require('./routes/perundanganKepRoute.js');
+const perundanganPerRoute = require('./routes/perundanganPerRoute.js');
+const dotenv = require('dotenv');
 dotenv.config();
 
 const PORT = process.env.PORT || 4000;
@@ -24,6 +24,13 @@ app.use(
     origin: ['http://localhost:5174', 'http://localhost:5173'],
   })
 );
+
+// app.use(
+//   cors({
+//     credentials: true,
+//     origin: ['https://manajemenkaranganyar.com'],
+//   })
+// );
 app.use(cookieParser());
 app.use(express.json());
 app.use(FileUpload());

@@ -1,12 +1,12 @@
-import perundanganKepModel from '../models/perundanganKepModel.js';
-import usersModel from '../models/usersModel.js';
-import { Op } from 'sequelize';
-import bcrypt from 'bcrypt';
-import { response } from 'express';
+const perundanganKepModel = require('../models/perundanganKepModel.js');
+const usersModel = require('../models/usersModel.js');
+const { Op } = require('sequelize');
+const bcrypt = require('bcrypt');
+const { response } = require('express');
 
 // CONTROLLER GET ALL SURAT
 
-export const getPerundanganKep = async (req, res) => {
+exports.getPerundanganKep = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -27,7 +27,7 @@ export const getPerundanganKep = async (req, res) => {
 };
 
 // CONTROLLER GET SURAT BY ID
-export const getPerundanganKepById = async (req, res) => {
+exports.getPerundanganKepById = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -51,7 +51,7 @@ export const getPerundanganKepById = async (req, res) => {
 };
 
 // CONTROLLER CREATE SURAT
-export const createPerundanganKep = async (req, res) => {
+exports.createPerundanganKep = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -88,7 +88,7 @@ export const createPerundanganKep = async (req, res) => {
 };
 
 // CONTROLLER UPDATdataK SURAT
-export const updatePerundanganKep = async (req, res) => {
+exports.updatePerundanganKep = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -143,7 +143,7 @@ export const updatePerundanganKep = async (req, res) => {
 };
 
 // CONTROLLER DELETE SURAT
-export const deletePerundanganKep = async (req, res) => {
+exports.deletePerundanganKep = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -179,7 +179,7 @@ export const deletePerundanganKep = async (req, res) => {
   }
 };
 
-export const deleteDataByYear = async (req, res) => {
+exports.deleteDataByYear = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);

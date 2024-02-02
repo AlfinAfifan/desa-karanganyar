@@ -1,10 +1,10 @@
-import { Sequelize } from "sequelize";
-import db from "../config/database.js";
+const { Sequelize } = require('sequelize');
+const db = require('../config/database.js');
 
 const { DataTypes } = Sequelize;
 
 const usersModel = db.define(
-  "users",
+  'users',
   {
     name: DataTypes.STRING,
     email: DataTypes.STRING,
@@ -16,8 +16,8 @@ const usersModel = db.define(
   }
 );
 
-export default usersModel;
+module.exports = usersModel;
 
-async () => {
+(async () => {
   await db.sync();
-};
+})();

@@ -41,7 +41,6 @@ const TableKodeSurat = () => {
 
   const handleDelete = (id) => {
     dispatch(deleteKodeSurat(id));
-    toast.success('Hapus Data Berhasil');
   };
 
   // LOADING

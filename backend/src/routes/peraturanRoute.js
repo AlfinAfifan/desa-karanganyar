@@ -1,5 +1,5 @@
-import express from 'express';
-import { getPeraturan, getPeraturanById, createPeraturan, updatePeraturan, deletePeraturan, deleteDataByYear } from '../controller/peraturanController.js';
+const express = require('express');
+const { getPeraturan, getPeraturanById, createPeraturan, updatePeraturan, deletePeraturan, deleteDataByYear } = require('../controller/peraturanController.js');
 
 const router = express.Router();
 
@@ -16,4 +16,4 @@ router.delete('/peraturan/:id', deletePeraturan);
 // ROUTER DELETE YEAR
 router.delete('/peraturanyear/:year', deleteDataByYear);
 
-export default router;
+module.exports = router;

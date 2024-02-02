@@ -1,24 +1,14 @@
-import inventarisModel from '../models/inventarisModel.js';
-import path from 'path';
-import fs from 'fs';
-import { response } from 'express';
-import usersModel from '../models/usersModel.js';
-import { Op } from 'sequelize';
-import bcrypt from 'bcrypt';
+const inventarisModel = require('../models/inventarisModel.js');
+const path = require('path');
+const fs = require('fs');
+const { response } = require('express');
+const usersModel = require('../models/usersModel.js');
+const { Op } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 // CONTROLLER GET ALL SURAT
 
-export const getInventaris = async (req, res) => {
-  // CEK TOKEN
-  const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) return res.sendStatus(401);
-  const user = await usersModel.findAll({
-    where: {
-      refresh_token: refreshToken,
-    },
-  });
-  if (!user[0]) return res.sendStatus(403);
-
+exports.getInventaris = async (req, res) => {
   try {
     const response = await inventarisModel.findAll();
 
@@ -29,8 +19,7 @@ export const getInventaris = async (req, res) => {
 };
 
 // CONTROLLER GET SURAT BY ID
-
-export const getInventarisById = async (req, res) => {
+exports.getInventarisById = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -54,7 +43,7 @@ export const getInventarisById = async (req, res) => {
 };
 
 // CONTROLLER CREATE SURAT
-export const createInventaris = async (req, res) => {
+exports.createInventaris = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -121,7 +110,7 @@ const processFile = (req, file) => {
     const ext = path.extname(file.name);
     const timestamp = new Date().getTime();
     const fileName = file.md5 + timestamp + ext;
-    const url = `${req.protocol}://${process.env.DOMAIN}/Inventaris/${fileName}`;
+    const url = `${process.env.DOMAIN}/Inventaris/${fileName}`;
 
     // Allowed file extensions
     const allowedType = ['.jpg', '.jpeg', '.png'];
@@ -146,7 +135,7 @@ const processFile = (req, file) => {
 
 // CONTROLLER UPDATE SURAT
 
-export const updateInventaris = async (req, res) => {
+exports.updateInventaris = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -223,7 +212,7 @@ const processFileUpdate = async (req, file, oldFileName) => {
     try {
       // Check if file is present
       if (!file) {
-        const url = oldFileName ? `${req.protocol}://${process.env.DOMAIN}/Inventaris/${oldFileName}` : null;
+        const url = oldFileName ? `${process.env.DOMAIN}/Inventaris/${oldFileName}` : null;
         resolve({ fileName: oldFileName, url });
         return;
       }
@@ -232,7 +221,7 @@ const processFileUpdate = async (req, file, oldFileName) => {
       const ext = path.extname(file.name);
       const timestamp = new Date().getTime();
       const fileName = file.md5 + timestamp + ext;
-      const url = `${req.protocol}://${process.env.DOMAIN}/Inventaris/${fileName}`;
+      const url = `${process.env.DOMAIN}/Inventaris/${fileName}`;
 
       // Allowed file extensions
       const allowedType = ['.jpg', '.jpeg', '.png'];
@@ -265,7 +254,7 @@ const processFileUpdate = async (req, file, oldFileName) => {
 };
 
 // CONTROLLER DELETE SURAT
-export const deleteInventaris = async (req, res) => {
+exports.deleteInventaris = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -309,7 +298,7 @@ export const deleteInventaris = async (req, res) => {
   }
 };
 
-export const deleteDataByYear = async (req, res) => {
+exports.deleteDataByYear = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);

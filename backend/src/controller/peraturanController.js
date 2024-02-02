@@ -1,13 +1,13 @@
-import peraturanModel from '../models/peraturanModel.js';
-import path from 'path';
-import fs from 'fs';
-import { response } from 'express';
-import usersModel from '../models/usersModel.js';
-import { Op } from 'sequelize';
-import bcrypt from 'bcrypt';
+const peraturanModel = require('../models/peraturanModel.js');
+const path = require('path');
+const fs = require('fs');
+const { response } = require('express');
+const usersModel = require('../models/usersModel.js');
+const { Op } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 // CONTROLLER GET ALL SURAT
-export const getPeraturan = async (req, res) => {
+exports.getPeraturan = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -28,7 +28,7 @@ export const getPeraturan = async (req, res) => {
 };
 
 // CONTROLLER GET SURAT BY ID
-export const getPeraturanById = async (req, res) => {
+exports.getPeraturanById = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -52,7 +52,7 @@ export const getPeraturanById = async (req, res) => {
 };
 
 // CONTROLLER CREATE SURAT
-export const createPeraturan = async (req, res) => {
+exports.createPeraturan = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -80,7 +80,7 @@ export const createPeraturan = async (req, res) => {
   const ext = path.extname(fileSurat.name);
   const timestamp = new Date().getTime();
   const fileName = fileSurat.md5 + timestamp + ext.toLowerCase();
-  const url = `${req.protocol}://${process.env.DOMAIN}/Peraturan/${fileName}`;
+  const url = `${process.env.DOMAIN}/Peraturan/${fileName}`;
 
   // allowed type extension image
   const allowedType = ['.pdf'];
@@ -116,7 +116,7 @@ export const createPeraturan = async (req, res) => {
 };
 
 // CONTROLLER UPDATE SURAT
-export const updatePeraturan = async (req, res) => {
+exports.updatePeraturan = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -167,7 +167,7 @@ export const updatePeraturan = async (req, res) => {
       if (err) return res.status(500).json({ message: err.message });
     });
 
-    urlChecked = `${req.protocol}://${process.env.DOMAIN}/Peraturan/${fileName}`;
+    urlChecked = `${process.env.DOMAIN}/Peraturan/${fileName}`;
   }
 
   // request new update
@@ -210,7 +210,7 @@ export const updatePeraturan = async (req, res) => {
 };
 
 // CONTROLLER DELETE SURAT
-export const deletePeraturan = async (req, res) => {
+exports.deletePeraturan = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -250,7 +250,7 @@ export const deletePeraturan = async (req, res) => {
   }
 };
 
-export const deleteDataByYear = async (req, res) => {
+exports.deleteDataByYear = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);

@@ -1,5 +1,5 @@
-import { Sequelize } from 'sequelize';
-import db from '../config/database.js';
+const { Sequelize } = require('sequelize');
+const db = require('../config/database.js');
 
 const { DataTypes } = Sequelize;
 
@@ -21,7 +21,7 @@ const suratKeluarModel = db.define(
   }
 );
 
-export default suratKeluarModel;
+module.exports = suratKeluarModel;
 
 (async () => {
   await db.sync();

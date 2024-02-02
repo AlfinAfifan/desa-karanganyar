@@ -1,6 +1,7 @@
 {
   "name": "administrasi-desa",
   "private": true,
+  "homepage": "https://manajemenkaranganyar.com/",
   "version": "0.0.0",
   "type": "module",
   "scripts": {

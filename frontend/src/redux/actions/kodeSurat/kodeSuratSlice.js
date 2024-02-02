@@ -30,6 +30,7 @@ const kodeSuratSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(createKodeSurat.pending, (state, action) => {
@@ -49,6 +50,7 @@ const kodeSuratSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(updateKodeSurat.pending, (state, action) => {
@@ -68,6 +70,7 @@ const kodeSuratSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       })
       .addCase(deleteKodeSurat.pending, (state, action) => {
@@ -87,6 +90,7 @@ const kodeSuratSlice = createSlice({
         return {
           ...state,
           error: action.payload,
+          loading: false,
         };
       });
   },

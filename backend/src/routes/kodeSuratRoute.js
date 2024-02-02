@@ -1,5 +1,5 @@
-import express from 'express';
-import { getKodeSurat, getKodeSuratById, createKodeSurat, updateKodeSurat, deleteKodeSurat } from '../controller/kodeSuratController.js';
+const express = require('express');
+const { getKodeSurat, getKodeSuratById, createKodeSurat, updateKodeSurat, deleteKodeSurat } = require('../controller/kodeSuratController.js');
 
 const router = express.Router();
 
@@ -14,4 +14,4 @@ router.patch('/kodesurat/:id', updateKodeSurat);
 // ROUTE DELETE SURAT
 router.delete('/kodesurat/:id', deleteKodeSurat);
 
-export default router;
+module.exports = router;

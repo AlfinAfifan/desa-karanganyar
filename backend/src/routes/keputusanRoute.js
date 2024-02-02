@@ -1,5 +1,5 @@
-import express from 'express';
-import { getKeputusan, getKeputusanById, createKeputusan, updateKeputusan, deleteKeputusan, deleteDataByYear } from '../controller/keputusanController.js';
+const express = require('express');
+const { getKeputusan, getKeputusanById, createKeputusan, updateKeputusan, deleteKeputusan, deleteDataByYear } = require('../controller/keputusanController.js');
 
 const router = express.Router();
 
@@ -16,4 +16,4 @@ router.delete('/keputusan/:id', deleteKeputusan);
 // ROUTER DELETE YEAR
 router.delete('/keputusanyear/:year', deleteDataByYear);
 
-export default router;
+module.exports = router;

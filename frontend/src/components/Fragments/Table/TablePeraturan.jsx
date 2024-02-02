@@ -17,6 +17,7 @@ import { ExportPeraturan } from '../Export/ExportPeraturan';
 import { toast } from 'react-toastify';
 import Input from '../../Elements/Input/Input';
 import SyncLoader from 'react-spinners/SyncLoader';
+import { Link } from 'react-router-dom';
 
 const TablePeraturan = () => {
   const dispatch = useDispatch();
@@ -80,7 +81,6 @@ const TablePeraturan = () => {
   // DELETE DATA
   const handleDelete = (id) => {
     dispatch(deletePeraturan(id));
-    toast.success('Hapus Data Berhasil');
   };
 
   // FORMAT DATA
@@ -93,25 +93,6 @@ const TablePeraturan = () => {
     dispatch(deleteByYear({ year: year, password: confirmPwd }));
     form.current.reset();
   };
-
-  // Notif
-  useEffect(() => {
-    if (isSuccess === true) {
-      toast.success(`Format Data Berhasil`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } else if (isError) {
-      toast.error(`Format Data Gagal`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
-  }, [isSuccess, isError]);
 
   // LOADING
   const loading = useSelector((state) => state.peraturan.loading);
@@ -253,13 +234,10 @@ const TablePeraturan = () => {
                       </ButtonIcon>
 
                       {/* Detail */}
-                      <ButtonIcon
-                        hoverBgColor="hover:bg-slate-200"
-                        onClick={() => {
-                          document.getElementById('modal_file').showModal(), setUrlSelected(datafix.url);
-                        }}
-                      >
-                        <HiOutlineSquare2Stack className="text-yellow-600" />
+                      <ButtonIcon hoverBgColor="hover:bg-slate-200">
+                        <a href={datafix.url} target="_blank">
+                          <HiOutlineSquare2Stack className="text-yellow-600" />
+                        </a>
                       </ButtonIcon>
                     </div>
                   </td>
@@ -271,11 +249,6 @@ const TablePeraturan = () => {
 
       {/* MODAL */}
       <InputPeraturan idSelected={idSelected} setIdSelected={setIdSelected} />
-
-      {/* Modal PDF */}
-      <ModalDetail>
-        <PdfViewer url={urlSelected} />
-      </ModalDetail>
 
       <ModalConfirm title="Konfirmasi Hapus!" onClick={() => handleDelete(idSelected)}>
         Yakin untuk menghapus data ini ?

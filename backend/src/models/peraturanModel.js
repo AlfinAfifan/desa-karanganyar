@@ -1,5 +1,5 @@
-import { Sequelize } from 'sequelize';
-import db from '../config/database.js';
+const { Sequelize } = require('sequelize');
+const db = require('../config/database.js');
 
 const { DataTypes } = Sequelize;
 
@@ -21,7 +21,7 @@ const peraturanModel = db.define(
   }
 );
 
-export default peraturanModel;
+module.exports = peraturanModel;
 
 (async () => {
   await db.sync();

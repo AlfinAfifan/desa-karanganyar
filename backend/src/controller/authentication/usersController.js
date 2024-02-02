@@ -1,13 +1,12 @@
-import usersModel from "../../models/usersModel.js";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { refreshToken } from "./refreshToken.js";
+const usersModel = require('../../models/usersModel.js');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // CONTROLLER GET ALL USERS
-export const getUsers = async (req, res) => {
+exports.getUsers = async (req, res) => {
   try {
     const users = await usersModel.findAll({
-      attributes: ["id", "name", "email"],
+      attributes: ['id', 'name', 'email'],
     });
     res.json(users);
   } catch (error) {
@@ -18,7 +17,7 @@ export const getUsers = async (req, res) => {
 };
 
 // CONTROLLER CREATE USERS
-export const createUsers = async (req, res) => {
+exports.createUsers = async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
   if (password !== confirmPassword)
     return res.status(400).json({
@@ -33,17 +32,17 @@ export const createUsers = async (req, res) => {
       password: hashPassword,
     });
     res.json({
-      message: "create users success",
+      message: 'create users success',
     });
   } catch (error) {
     res.json({
-      message: "create users failed",
+      message: 'create users failed',
     });
   }
 };
 
 // CONTROLLER LOGIN USERS
-export const loginUsers = async (req, res) => {
+exports.loginUsers = async (req, res) => {
   try {
     const user = await usersModel.findAll({
       where: {
@@ -51,21 +50,13 @@ export const loginUsers = async (req, res) => {
       },
     });
     const match = await bcrypt.compare(req.body.password, user[0].password);
-    if (!match) return res.status(400).json({ message: "wrong password" });
+    if (!match) return res.status(400).json({ message: 'wrong password' });
     const userid = user[0].id;
     const name = user[0].name;
     const email = user[0].email;
 
-    const accessToken = jwt.sign(
-      { userid, name, email },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: "20s" }
-    );
-    const refreshToken = jwt.sign(
-      { userid, name, email },
-      process.env.REFRESH_TOKEN_SECRET,
-      { expiresIn: "1d" }
-    );
+    const accessToken = jwt.sign({ userid, name, email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '20s' });
+    const refreshToken = jwt.sign({ userid, name, email }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
     await usersModel.update(
       { refresh_token: refreshToken },
       {
@@ -74,7 +65,7 @@ export const loginUsers = async (req, res) => {
         },
       }
     );
-    res.cookie("refreshToken", refreshToken, {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -87,7 +78,7 @@ export const loginUsers = async (req, res) => {
 };
 
 // CONTROLLER LOGOUT USERS
-export const logoutUsers = async (req, res) => {
+exports.logoutUsers = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(204);
   const user = await usersModel.findAll({
@@ -105,6 +96,6 @@ export const logoutUsers = async (req, res) => {
       },
     }
   );
-  res.clearCookie("refreshToken");
+  res.clearCookie('refreshToken');
   return res.sendStatus(200);
 };

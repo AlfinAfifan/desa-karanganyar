@@ -16,6 +16,7 @@ import { formatDate } from '../FormatDate/FormatDate';
 import { toast } from 'react-toastify';
 import Input from '../../Elements/Input/Input';
 import SyncLoader from 'react-spinners/SyncLoader';
+import { Link } from 'react-router-dom';
 
 const TableSuratMasuk = () => {
   // GET DATA
@@ -93,7 +94,6 @@ const TableSuratMasuk = () => {
   // DELETE DATA
   const handleDelete = (id) => {
     dispatch(deleteSuratMasuk(id));
-    toast.success('Hapus Data Berhasil');
   };
 
   // FORMAT DATA
@@ -106,25 +106,6 @@ const TableSuratMasuk = () => {
     dispatch(deleteByYear({ year: year, password: confirmPwd }));
     form.current.reset();
   };
-
-  // Notif
-  useEffect(() => {
-    if (isSuccess === true) {
-      toast.success(`Format Data Berhasil`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    } else if (isError) {
-      toast.error(`Format Data Gagal`, {
-        autoClose: 2000,
-      });
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
-    }
-  }, [isSuccess, isError]);
 
   // LOADING
   const loading = useSelector((state) => state.suratMasuk.loading);
@@ -270,13 +251,10 @@ const TableSuratMasuk = () => {
                       </ButtonIcon>
 
                       {/* Detail */}
-                      <ButtonIcon
-                        hoverBgColor="hover:bg-slate-200"
-                        onClick={() => {
-                          document.getElementById('modal_file').showModal(), setUrlSelected(datafix.url);
-                        }}
-                      >
-                        <HiOutlineSquare2Stack className="text-yellow-600" />
+                      <ButtonIcon hoverBgColor="hover:bg-slate-200">
+                        <a href={datafix.url} target="_blank">
+                          <HiOutlineSquare2Stack className="text-yellow-600" />
+                        </a>
                       </ButtonIcon>
                     </div>
                   </td>
@@ -288,11 +266,6 @@ const TableSuratMasuk = () => {
 
       {/* Modal Input */}
       <InputSuratMasuk idSelected={idSelected} setIdSelected={setIdSelected} year={year} />
-
-      {/* Modal PDF */}
-      <ModalDetail>
-        <PdfViewer url={urlSelected} />
-      </ModalDetail>
 
       <ModalConfirm title="Konfirmasi Hapus!" onClick={() => handleDelete(idSelected)}>
         Yakin untuk menghapus data ini ?

@@ -1,14 +1,14 @@
-import keputusanModel from '../models/keputusanModel.js';
-import path from 'path';
-import fs from 'fs';
-import { response } from 'express';
-import usersModel from '../models/usersModel.js';
-import { Op } from 'sequelize';
-import bcrypt from 'bcrypt';
+const keputusanModel = require('../models/keputusanModel.js');
+const path = require('path');
+const fs = require('fs');
+const { response } = require('express');
+const usersModel = require('../models/usersModel.js');
+const { Op } = require('sequelize');
+const bcrypt = require('bcrypt');
 
 // CONTROLLER GET ALL SURAT
 
-export const getKeputusan = async (req, res) => {
+exports.getKeputusan = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -29,7 +29,7 @@ export const getKeputusan = async (req, res) => {
 };
 
 // CONTROLLER GET SURAT BY ID
-export const getKeputusanById = async (req, res) => {
+exports.getKeputusanById = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -53,7 +53,7 @@ export const getKeputusanById = async (req, res) => {
 };
 
 // CONTROLLER CREATE SURAT
-export const createKeputusan = async (req, res) => {
+exports.createKeputusan = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -81,7 +81,7 @@ export const createKeputusan = async (req, res) => {
   const ext = path.extname(fileSurat.name);
   const timestamp = new Date().getTime();
   const fileName = fileSurat.md5 + timestamp + ext.toLowerCase();
-  const url = `${req.protocol}://${process.env.DOMAIN}/Keputusan/${fileName}`;
+  const url = `${process.env.DOMAIN}/Keputusan/${fileName}`;
 
   // allowed type extension image
   const allowedType = ['.pdf'];
@@ -117,7 +117,7 @@ export const createKeputusan = async (req, res) => {
 };
 
 // CONTROLLER UPDATE SURAT
-export const updateKeputusan = async (req, res) => {
+exports.updateKeputusan = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -168,7 +168,7 @@ export const updateKeputusan = async (req, res) => {
       if (err) return res.status(500).json({ message: err.message });
     });
 
-    urlChecked = `${req.protocol}://${process.env.DOMAIN}/Keputusan/${fileName}`;
+    urlChecked = `${process.env.DOMAIN}/Keputusan/${fileName}`;
   }
 
   // request new update
@@ -211,7 +211,7 @@ export const updateKeputusan = async (req, res) => {
 };
 
 // CONTROLLER DELETE SURAT
-export const deleteKeputusan = async (req, res) => {
+exports.deleteKeputusan = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
@@ -251,7 +251,7 @@ export const deleteKeputusan = async (req, res) => {
   }
 };
 
-export const deleteDataByYear = async (req, res) => {
+exports.deleteDataByYear = async (req, res) => {
   // CEK TOKEN
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) return res.sendStatus(401);
