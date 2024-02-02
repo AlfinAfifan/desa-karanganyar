@@ -2,14 +2,20 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getKeputusan = createAsyncThunk('getKeputusan', async () => {
-  const res = await axios.get('http://localhost:4000/keputusan');
+  const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/keputusan`, {
+    withCredentials: true,
+  });
   return res.data;
 });
 
 export const createKeputusan = createAsyncThunk('inputKeputusan', async (dataInput, thunkApi) => {
   try {
-    await axios.post('http://localhost:4000/keputusan', dataInput);
-    const res = await axios.get('http://localhost:4000/keputusan');
+    await axios.post(`${import.meta.env.VITE_APP_DOMAIN}/keputusan`, dataInput, {
+      withCredentials: true,
+    });
+    const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/keputusan`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {
@@ -19,8 +25,12 @@ export const createKeputusan = createAsyncThunk('inputKeputusan', async (dataInp
 
 export const updateKeputusan = createAsyncThunk('updateKeputusan', async (dataUpdate, thunkApi) => {
   try {
-    await axios.patch(`http://localhost:4000/keputusan/${dataUpdate.id}`, dataUpdate.data);
-    const res = await axios.get('http://localhost:4000/keputusan');
+    await axios.patch(`${import.meta.env.VITE_APP_DOMAIN}/keputusan/${dataUpdate.id}`, dataUpdate.data, {
+      withCredentials: true,
+    });
+    const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/keputusan`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {
@@ -30,8 +40,12 @@ export const updateKeputusan = createAsyncThunk('updateKeputusan', async (dataUp
 
 export const deleteKeputusan = createAsyncThunk('deleteKeputusan', async (id, thunkApi) => {
   try {
-    await axios.delete(`http://localhost:4000/keputusan/${id}`);
-    const res = await axios.get('http://localhost:4000/keputusan');
+    await axios.delete(`${import.meta.env.VITE_APP_DOMAIN}/keputusan/${id}`, {
+      withCredentials: true,
+    });
+    const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/keputusan`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {
@@ -41,8 +55,12 @@ export const deleteKeputusan = createAsyncThunk('deleteKeputusan', async (id, th
 
 export const deleteByYear = createAsyncThunk('deleteByYear', async (dataDelete, thunkApi) => {
   try {
-    await axios.delete(`http://localhost:4000/keputusanyear/${dataDelete.year}?password=${dataDelete.password}`);
-    const res = await axios.get('http://localhost:4000/keputusan');
+    await axios.delete(`${import.meta.env.VITE_APP_DOMAIN}/keputusanyear/${dataDelete.year}?password=${dataDelete.password}`, {
+      withCredentials: true,
+    });
+    const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/keputusan`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {

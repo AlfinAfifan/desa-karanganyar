@@ -15,9 +15,8 @@ const LoginPage = () => {
   const handleLogin = async (data) => {
     const { email, password } = data;
     try {
-      const res = await axios.post('http://localhost:4000/login', {
-        email,
-        password,
+      const res = await axios.post(`${import.meta.env.VITE_APP_DOMAIN}/login`, data, {
+        withCredentials: true,
       });
 
       const token = res.data.accessToken;

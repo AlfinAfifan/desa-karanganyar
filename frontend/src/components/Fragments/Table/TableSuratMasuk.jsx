@@ -117,14 +117,12 @@ const TableSuratMasuk = () => {
         window.location.reload();
       }, 2000);
     } else if (isError) {
-      if (isError.message === 'wrong password') {
-        toast.error(`Format Data Gagal`, {
-          autoClose: 2000,
-        });
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      }
+      toast.error(`Format Data Gagal`, {
+        autoClose: 2000,
+      });
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     }
   }, [isSuccess, isError]);
 

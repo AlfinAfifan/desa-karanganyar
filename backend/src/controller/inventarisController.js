@@ -9,6 +9,16 @@ import bcrypt from 'bcrypt';
 // CONTROLLER GET ALL SURAT
 
 export const getInventaris = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await inventarisModel.findAll();
 
@@ -19,7 +29,18 @@ export const getInventaris = async (req, res) => {
 };
 
 // CONTROLLER GET SURAT BY ID
+
 export const getInventarisById = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await inventarisModel.findOne({
       where: {
@@ -34,10 +55,20 @@ export const getInventarisById = async (req, res) => {
 
 // CONTROLLER CREATE SURAT
 export const createInventaris = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+
+  if (!user[0]) return res.sendStatus(403);
   try {
     // Check if request files are present
     if (!req.files || Object.keys(req.files).length !== 3) {
-      return res.status(400).json({ message: 'Harap sertakan ketiga file (fotoSebelum, fotoProses, fotoSesudah).' });
+      return res.status(400).json({ message: 'Harap sertakan ketiga file.' });
     }
 
     // Extract request body
@@ -116,6 +147,16 @@ const processFile = (req, file) => {
 // CONTROLLER UPDATE SURAT
 
 export const updateInventaris = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     // cek if there is data by id
     const inventaris = await inventarisModel.findOne({
@@ -142,23 +183,16 @@ export const updateInventaris = async (req, res) => {
     }
 
     // request new update
-    const tanggal = req.body.tanggal;
-    const nomor_surat = req.body.nomor_surat;
-    const perihal = req.body.perihal;
-    const instansiDituju = req.body.instansiDituju;
-    const penanggungJawab = req.body.penanggungJawab;
-    const tanggal_surat = req.body.tanggal_surat;
-    const keterangan = req.body.keterangan;
+    const { tanggal, namaProyek, volume, biaya, lokasi, keterangan } = req.body;
 
     // Save update to database
     await inventarisModel.update(
       {
         tanggal,
-        nomor_surat,
-        perihal,
-        instansiDituju,
-        penanggungJawab,
-        tanggal_surat,
+        namaProyek,
+        volume,
+        biaya,
+        lokasi,
         keterangan,
         fotoSebelum: fotoSebelumData.fileName || inventaris.fotoSebelum,
         urlSebelum: fotoSebelumData.url || inventaris.urlSebelum,
@@ -232,6 +266,16 @@ const processFileUpdate = async (req, file, oldFileName) => {
 
 // CONTROLLER DELETE SURAT
 export const deleteInventaris = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   const inventaris = await inventarisModel.findOne({
     where: {
       id: req.params.id,
@@ -266,11 +310,21 @@ export const deleteInventaris = async (req, res) => {
 };
 
 export const deleteDataByYear = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     // Cocokan password
     const user = await usersModel.findAll();
     const match = await bcrypt.compare(req.query.password, user[0].password);
-    if (!match) return res.status(400).json({ message: 'wrong password' });
+    if (!match) return res.status(400).json({ message: 'Password Salah' });
 
     // Ambil tahun
     const year = req.params.year;

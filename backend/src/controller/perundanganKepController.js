@@ -7,6 +7,16 @@ import { response } from 'express';
 // CONTROLLER GET ALL SURAT
 
 export const getPerundanganKep = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await perundanganKepModel.findAll();
 
@@ -18,6 +28,16 @@ export const getPerundanganKep = async (req, res) => {
 
 // CONTROLLER GET SURAT BY ID
 export const getPerundanganKepById = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await perundanganKepModel.findOne({
       where: {
@@ -32,6 +52,16 @@ export const getPerundanganKepById = async (req, res) => {
 
 // CONTROLLER CREATE SURAT
 export const createPerundanganKep = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   // request body
   const noPeraturan = req.body.noPeraturan;
   const tglPenetapan = req.body.tglPenetapan;
@@ -59,6 +89,16 @@ export const createPerundanganKep = async (req, res) => {
 
 // CONTROLLER UPDATdataK SURAT
 export const updatePerundanganKep = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   // cek if there is data by id
   const dataPerundanganKep = await perundanganKepModel.findOne({
     where: {
@@ -104,6 +144,16 @@ export const updatePerundanganKep = async (req, res) => {
 
 // CONTROLLER DELETE SURAT
 export const deletePerundanganKep = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   const dataPerundanganKep = await perundanganKepModel.findOne({
     where: {
       id: req.params.id,
@@ -130,11 +180,21 @@ export const deletePerundanganKep = async (req, res) => {
 };
 
 export const deleteDataByYear = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     // Cocokan password
     const user = await usersModel.findAll();
     const match = await bcrypt.compare(req.query.password, user[0].password);
-    if (!match) return res.status(400).json({ message: 'wrong password' });
+    if (!match) return res.status(400).json({ message: 'Password Salah' });
 
     // Ambil tahun
     const year = req.params.year;

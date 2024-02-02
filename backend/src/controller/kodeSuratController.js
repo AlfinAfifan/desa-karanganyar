@@ -2,10 +2,21 @@ import kodeSuratModel from '../models/kodeSuratModel.js';
 import path from 'path';
 import fs from 'fs';
 import { response } from 'express';
+import usersModel from '../models/usersModel.js';
 
 // CONTROLLER GET ALL SURAT
 
 export const getKodeSurat = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await kodeSuratModel.findAll();
 
@@ -17,6 +28,16 @@ export const getKodeSurat = async (req, res) => {
 
 // CONTROLLER GET SURAT BY ID
 export const getKodeSuratById = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await kodeSuratModel.findOne({
       where: {
@@ -31,6 +52,16 @@ export const getKodeSuratById = async (req, res) => {
 
 // CONTROLLER CREATE SURAT
 export const createKodeSurat = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   // request body
   const kodeSurat = req.body.kodeSurat;
   const keterangan = req.body.keterangan;
@@ -52,6 +83,16 @@ export const createKodeSurat = async (req, res) => {
 
 // CONTROLLER UPDATdataK SURAT
 export const updateKodeSurat = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   // cek if there is data by id
   const dataKodeSurat = await kodeSuratModel.findOne({
     where: {
@@ -91,6 +132,16 @@ export const updateKodeSurat = async (req, res) => {
 
 // CONTROLLER DELETE SURAT
 export const deleteKodeSurat = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   const dataKodeSurat = await kodeSuratModel.findOne({
     where: {
       id: req.params.id,

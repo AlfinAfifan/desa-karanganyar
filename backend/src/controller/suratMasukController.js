@@ -9,6 +9,16 @@ import { Op } from 'sequelize';
 // CONTROLLER GET ALL SURAT
 
 export const getSuratMasuk = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await suratMasukModel.findAll();
 
@@ -20,6 +30,16 @@ export const getSuratMasuk = async (req, res) => {
 
 // CONTROLLER GET SURAT BY ID
 export const getSuratMasukById = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await suratMasukModel.findOne({
       where: {
@@ -33,7 +53,17 @@ export const getSuratMasukById = async (req, res) => {
 };
 
 // CONTROLLER CREATE SURAT
-export const createSuratMasuk = (req, res) => {
+export const createSuratMasuk = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   // check if request file nothing
   if (req.files === null) return res.status(400).json({ message: 'no file uploaded' });
 
@@ -57,7 +87,7 @@ export const createSuratMasuk = (req, res) => {
   const allowedType = ['.pdf'];
 
   // validate images extensions
-  if (!allowedType.includes(ext.toLocaleLowerCase())) return res.status(422).json({ message: 'invalid file' });
+  if (!allowedType.includes(ext.toLocaleLowerCase())) return res.status(422).json({ message: 'Invalid File Type' });
 
   // if all requirements are fulfilled save image to public folder
   fileSurat.mv(`./public/SuratMasuk/${fileName}`, async (err) => {
@@ -88,6 +118,16 @@ export const createSuratMasuk = (req, res) => {
 
 // CONTROLLER UPDATE SURAT
 export const updateSuratMasuk = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   // cek if there is data by id
   const suratMasuk = await suratMasukModel.findOne({
     where: {
@@ -117,7 +157,7 @@ export const updateSuratMasuk = async (req, res) => {
     // allowed type extension image
     const allowedType = ['.pdf'];
     // validate extensions file
-    if (!allowedType.includes(ext.toLocaleLowerCase())) return res.status(422).json({ message: 'invalid file' });
+    if (!allowedType.includes(ext.toLocaleLowerCase())) return res.status(422).json({ message: 'Invalid File Type' });
 
     // delete old file
     const filepath = `./public/SuratMasuk/${suratMasuk.fileSurat}`;
@@ -172,6 +212,16 @@ export const updateSuratMasuk = async (req, res) => {
 
 // CONTROLLER DELETE SURAT
 export const deleteSuratMasuk = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   const suratMasuk = await suratMasukModel.findOne({
     where: {
       id: req.params.id,
@@ -202,11 +252,21 @@ export const deleteSuratMasuk = async (req, res) => {
 };
 
 export const deleteDataByYear = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     // Cocokan password
     const user = await usersModel.findAll();
     const match = await bcrypt.compare(req.query.password, user[0].password);
-    if (!match) return res.status(400).json({ message: 'wrong password' });
+    if (!match) return res.status(400).json({ message: 'Password Salah' });
 
     // Ambil tahun
     const year = req.params.year;

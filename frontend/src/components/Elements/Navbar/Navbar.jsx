@@ -2,11 +2,16 @@ import React from 'react';
 import ModalLogout from '../Modal/ModalLogout';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../../assets/img/logo1.png';
+import axios from 'axios';
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
+    axios.delete(`${import.meta.env.VITE_APP_DOMAIN}/logout`, {
+      withCredentials: true,
+    });
+
     sessionStorage.removeItem('access_token');
     sessionStorage.removeItem('email');
     sessionStorage.removeItem('name');

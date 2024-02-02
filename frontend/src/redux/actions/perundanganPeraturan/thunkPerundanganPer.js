@@ -2,14 +2,20 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const getPerundanganPer = createAsyncThunk('getPerundanganPer', async () => {
-  const res = await axios.get('http://localhost:4000/perundanganper');
+  const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/perundanganper`, {
+    withCredentials: true,
+  });
   return res.data;
 });
 
 export const createPerundanganPer = createAsyncThunk('createPerundanganPer', async (dataInput, thunkApi) => {
   try {
-    await axios.post('http://localhost:4000/perundanganper', dataInput);
-    const res = await axios.get('http://localhost:4000/perundanganper');
+    await axios.post(`${import.meta.env.VITE_APP_DOMAIN}/perundanganper`, dataInput, {
+      withCredentials: true,
+    });
+    const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/perundanganper`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {
@@ -19,8 +25,12 @@ export const createPerundanganPer = createAsyncThunk('createPerundanganPer', asy
 
 export const updatePerundanganPer = createAsyncThunk('updatePerundanganPer', async (dataUpdate, thunkApi) => {
   try {
-    await axios.patch(`http://localhost:4000/perundanganper/${dataUpdate.id}`, dataUpdate.data);
-    const res = await axios.get('http://localhost:4000/perundanganper');
+    await axios.patch(`${import.meta.env.VITE_APP_DOMAIN}/perundanganper/${dataUpdate.id}`, dataUpdate.data, {
+      withCredentials: true,
+    });
+    const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/perundanganper`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {
@@ -30,8 +40,12 @@ export const updatePerundanganPer = createAsyncThunk('updatePerundanganPer', asy
 
 export const deletePerundanganPer = createAsyncThunk('deletePerundanganPer', async (id, thunkApi) => {
   try {
-    await axios.delete(`http://localhost:4000/perundanganper/${id}`);
-    const res = await axios.get('http://localhost:4000/perundanganper');
+    await axios.delete(`${import.meta.env.VITE_APP_DOMAIN}/perundanganper/${id}`, {
+      withCredentials: true,
+    });
+    const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/perundanganper`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {
@@ -41,8 +55,12 @@ export const deletePerundanganPer = createAsyncThunk('deletePerundanganPer', asy
 
 export const deleteByYear = createAsyncThunk('deleteByYear', async (dataDelete, thunkApi) => {
   try {
-    await axios.delete(`http://localhost:4000/perundanganperyear/${dataDelete.year}?password=${dataDelete.password}`);
-    const res = await axios.get('http://localhost:4000/perundanganper');
+    await axios.delete(`${import.meta.env.VITE_APP_DOMAIN}/perundanganperyear/${dataDelete.year}?password=${dataDelete.password}`, {
+      withCredentials: true,
+    });
+    const res = await axios.get(`${import.meta.env.VITE_APP_DOMAIN}/perundanganper`, {
+      withCredentials: true,
+    });
 
     return res.data;
   } catch (error) {

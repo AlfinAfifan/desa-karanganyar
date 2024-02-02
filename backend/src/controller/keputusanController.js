@@ -9,6 +9,16 @@ import bcrypt from 'bcrypt';
 // CONTROLLER GET ALL SURAT
 
 export const getKeputusan = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await keputusanModel.findAll();
 
@@ -20,6 +30,16 @@ export const getKeputusan = async (req, res) => {
 
 // CONTROLLER GET SURAT BY ID
 export const getKeputusanById = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     const response = await keputusanModel.findOne({
       where: {
@@ -33,7 +53,17 @@ export const getKeputusanById = async (req, res) => {
 };
 
 // CONTROLLER CREATE SURAT
-export const createKeputusan = (req, res) => {
+export const createKeputusan = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   // check if request file nothing
   if (req.files === null) return res.status(400).json({ message: 'no file uploaded' });
 
@@ -57,7 +87,7 @@ export const createKeputusan = (req, res) => {
   const allowedType = ['.pdf'];
 
   // validate images extensions
-  if (!allowedType.includes(ext.toLocaleLowerCase())) return res.status(422).json({ message: 'invalid file' });
+  if (!allowedType.includes(ext.toLocaleLowerCase())) return res.status(422).json({ message: 'Invalid File Type' });
 
   // if all requirements are fulfilled save image to public folder
   fileSurat.mv(`./public/Keputusan/${fileName}`, async (err) => {
@@ -88,6 +118,16 @@ export const createKeputusan = (req, res) => {
 
 // CONTROLLER UPDATE SURAT
 export const updateKeputusan = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   // cek if there is data by id
   const keputusan = await keputusanModel.findOne({
     where: {
@@ -117,7 +157,7 @@ export const updateKeputusan = async (req, res) => {
     // allowed type extension image
     const allowedType = ['.pdf'];
     // validate extensions file
-    if (!allowedType.includes(ext.toLocaleLowerCase())) return res.status(422).json({ message: 'invalid file' });
+    if (!allowedType.includes(ext.toLocaleLowerCase())) return res.status(422).json({ message: 'Invalid File Type' });
 
     // delete old file
     const filepath = `./public/Keputusan/${keputusan.fileSurat}`;
@@ -172,6 +212,16 @@ export const updateKeputusan = async (req, res) => {
 
 // CONTROLLER DELETE SURAT
 export const deleteKeputusan = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   const keputusan = await keputusanModel.findOne({
     where: {
       id: req.params.id,
@@ -202,6 +252,16 @@ export const deleteKeputusan = async (req, res) => {
 };
 
 export const deleteDataByYear = async (req, res) => {
+  // CEK TOKEN
+  const refreshToken = req.cookies.refreshToken;
+  if (!refreshToken) return res.sendStatus(401);
+  const user = await usersModel.findAll({
+    where: {
+      refresh_token: refreshToken,
+    },
+  });
+  if (!user[0]) return res.sendStatus(403);
+
   try {
     // Cocokan password
     const user = await usersModel.findAll();
