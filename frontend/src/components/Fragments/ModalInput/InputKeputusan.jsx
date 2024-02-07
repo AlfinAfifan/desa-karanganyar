@@ -66,14 +66,6 @@ const InputKeputusan = ({ setIdSelected, idSelected }) => {
   }, [dataEdit]);
 
   // On SUbmit
-  const error = useSelector((state) => state.keputusan.error);
-  useEffect(() => {
-    if (error === 'gagal') {
-      setTimeout(() => {
-        window.location.reload();
-      });
-    }
-  }, [error]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { tanggalKep, nomorKep, tentang, uraianSingkat, tanggalLapor, nomorLapor, keterangan, dokKeputusan } = formValues;
@@ -91,10 +83,8 @@ const InputKeputusan = ({ setIdSelected, idSelected }) => {
     if (dataId.includes(dataEdit?.id)) {
       dispatch(updateKeputusan({ id: dataEdit.id, data: formData }));
       setIdSelected('');
-      toast.success('Edit Data Berhasil');
     } else {
       dispatch(createKeputusan(formData));
-      toast.success('Tambah Data Berhasil');
     }
 
     // Reset form

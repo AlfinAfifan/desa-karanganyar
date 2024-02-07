@@ -107,6 +107,7 @@ const inventarisSlice = createSlice({
           ...state,
           data: action.payload,
           deleteSuccess: true,
+          loading: false,
         };
       })
       .addCase(deleteByYear.rejected, (state, action) => {

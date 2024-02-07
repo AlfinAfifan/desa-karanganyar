@@ -113,6 +113,7 @@ const suratKeluarSlice = createSlice({
           data: action.payload,
           deleteSuccess: true,
           error: null,
+          loading: false,
         };
       })
       .addCase(deleteByYear.rejected, (state, action) => {

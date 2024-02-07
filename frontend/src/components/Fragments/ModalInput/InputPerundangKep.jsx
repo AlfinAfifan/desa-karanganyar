@@ -56,14 +56,6 @@ const InputPerundangKep = ({ idSelected, setIdSelected }) => {
   }, [dataEdit]);
 
   // On SUbmit
-  const error = useSelector((state) => state.perundanganKep.error);
-  useEffect(() => {
-    if (error === 'gagal') {
-      setTimeout(() => {
-        window.location.reload();
-      });
-    }
-  }, [error]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { noPeraturan, tglPenetapan, tentang, tglPengundangan, tambahanLembaran } = formValues;
@@ -78,10 +70,8 @@ const InputPerundangKep = ({ idSelected, setIdSelected }) => {
     if (dataId.includes(dataEdit?.id)) {
       dispatch(updatePerundanganKep({ id: dataEdit.id, data: formData }));
       setIdSelected('');
-      toast.success('Edit Data Berhasil');
     } else {
       dispatch(createPerundanganKep(formData));
-      toast.success('Tambah Data Berhasil');
     }
 
     // Reset form

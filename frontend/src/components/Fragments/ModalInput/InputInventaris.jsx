@@ -66,15 +66,6 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
     }
   }, [dataEdit]);
 
-  // HANDLE SUBMIT
-  const error = useSelector((state) => state.inventaris.error);
-  useEffect(() => {
-    if (error === 'gagal') {
-      setTimeout(() => {
-        window.location.reload();
-      });
-    }
-  }, [error]);
   const handleSubmit = (event) => {
     event.preventDefault();
     const { tanggal, namaProyek, volume, biaya, lokasi, keterangan, fotoSebelum, fotoProses, fotoSesudah } = formValues;
@@ -93,10 +84,8 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
     if (dataId.includes(dataEdit?.id)) {
       dispatch(updateInventaris({ id: dataEdit.id, data: formData }));
       setIdEdit('');
-      toast.success('Update Data Berhasil');
     } else {
       dispatch(createInventaris(formData));
-      toast.success('Tambah Data Berhasil');
     }
 
     // Reset nilai formulir

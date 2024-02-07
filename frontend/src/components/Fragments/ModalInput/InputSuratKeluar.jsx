@@ -80,14 +80,6 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
   }, [dataEdit]);
 
   // On SUbmit
-  const error = useSelector((state) => state.suratKeluar.error);
-  useEffect(() => {
-    if (error === 'gagal') {
-      setTimeout(() => {
-        window.location.reload();
-      });
-    }
-  }, [error]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { tanggal, nomor_surat, perihal, instansiDituju, penanggungJawab, tanggal_surat, keterangan, dokumen } = formValues;
@@ -105,10 +97,8 @@ const InputSuratKeluar = ({ idSelected, setIdSelected, year }) => {
     if (dataId.includes(dataEdit?.id)) {
       dispatch(updateSuratKeluar({ id: dataEdit.id, data: formData }));
       setIdSelected('');
-      toast.success('Edit Data Berhasil');
     } else {
       dispatch(createSuratKeluar(formData));
-      toast.success('Tambah Data Berhasil');
     }
 
     // Reset form

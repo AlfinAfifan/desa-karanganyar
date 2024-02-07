@@ -66,14 +66,6 @@ const InputPeraturan = ({ setIdSelected, idSelected }) => {
   }, [dataEdit]);
 
   // On SUbmit
-  const error = useSelector((state) => state.peraturan.error);
-  useEffect(() => {
-    if (error === 'gagal') {
-      setTimeout(() => {
-        window.location.reload();
-      });
-    }
-  }, [error]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     const { tanggalPer, nomorPer, tentang, uraianSingkat, tanggalAcc, nomorAcc, keterangan, dokumen } = formValues;
@@ -91,10 +83,8 @@ const InputPeraturan = ({ setIdSelected, idSelected }) => {
     if (dataId.includes(dataEdit?.id)) {
       dispatch(updatePeraturan({ id: dataEdit.id, data: formData }));
       setIdSelected('');
-      toast.success('Edit Data Berhasil');
     } else {
       dispatch(createPeraturan(formData));
-      toast.success('Tambah Data Berhasil');
     }
 
     // Reset form

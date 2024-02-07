@@ -56,10 +56,8 @@ const InputKodeSurat = ({ idSelected, setIdSelected }) => {
     if (dataId.includes(dataEdit?.id)) {
       dispatch(updateKodeSurat({ id: dataEdit.id, data: formData }));
       setIdSelected('');
-      toast.success('Edit Data Berhasil');
     } else {
       dispatch(createKodeSurat(formData));
-      toast.success('Tambah Data Berhasil');
     }
 
     // Reset form
