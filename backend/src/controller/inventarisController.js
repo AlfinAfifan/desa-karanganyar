@@ -55,25 +55,18 @@ exports.createInventaris = async (req, res) => {
 
   if (!user[0]) return res.sendStatus(403);
   try {
-    // Check if request files are present
-    if (!req.files || Object.keys(req.files).length !== 3) {
-      return res.status(400).json({ message: 'Harap sertakan ketiga file.' });
-    }
-
     // Extract request body
     const { tanggal, namaProyek, volume, biaya, lokasi, keterangan } = req.body;
 
     // Extract each file
-    const fotoSebelum = req.files.fotoSebelum;
-    const fotoProses = req.files.fotoProses;
-    const fotoSesudah = req.files.fotoSesudah;
-
-    console.log(fotoSebelum, fotoProses, fotoSesudah);
+    const fotoSebelum = req.files?.fotoSebelum;
+    const fotoProses = req.files?.fotoProses;
+    const fotoSesudah = req.files?.fotoSesudah;
 
     // Process each file and get URLs
-    const fotoSebelumData = await processFile(req, fotoSebelum);
-    const fotoProsesData = await processFile(req, fotoProses);
-    const fotoSesudahData = await processFile(req, fotoSesudah);
+    const fotoSebelumData = fotoSebelum ? await processFile(req, fotoSebelum) : null;
+    const fotoProsesData = fotoProses ? await processFile(req, fotoProses) : null;
+    const fotoSesudahData = fotoSesudah ? await processFile(req, fotoSesudah) : null;
 
     // Save data to the database
     const inventaris = await inventarisModel.create({
@@ -83,12 +76,12 @@ exports.createInventaris = async (req, res) => {
       biaya,
       lokasi,
       keterangan,
-      fotoSebelum: fotoSebelumData.fileName,
-      urlSebelum: fotoSebelumData.url,
-      fotoProses: fotoProsesData.fileName,
-      urlProses: fotoProsesData.url,
-      fotoSesudah: fotoSesudahData.fileName,
-      urlSesudah: fotoSesudahData.url,
+      fotoSebelum: fotoSebelumData?.fileName,
+      urlSebelum: fotoSebelumData?.url,
+      fotoProses: fotoProsesData?.fileName,
+      urlProses: fotoProsesData?.url,
+      fotoSesudah: fotoSesudahData?.fileName,
+      urlSesudah: fotoSesudahData?.url,
     });
 
     res.status(201).json({ message: 'Creating inventaris success', inventaris });
@@ -280,9 +273,16 @@ exports.deleteInventaris = async (req, res) => {
     const filepath2 = `./public/Inventaris/${inventaris.fotoProses}`;
     const filepath3 = `./public/Inventaris/${inventaris.fotoSesudah}`;
     // delete file in the filepath
-    fs.unlinkSync(filepath1);
-    fs.unlinkSync(filepath2);
-    fs.unlinkSync(filepath3);
+    if (inventaris.fotoSebelum) {
+      fs.unlinkSync(filepath1);
+    }
+    if (inventaris.fotoProses) {
+      fs.unlinkSync(filepath2);
+    }
+    if (inventaris.fotoSesudah) {
+      fs.unlinkSync(filepath3);
+    }
+    
     // delete file in databases by id
     await inventarisModel.destroy({
       where: {

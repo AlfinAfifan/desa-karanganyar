@@ -31,6 +31,7 @@ app.use(
 //     origin: ['https://manajemenkaranganyar.com'],
 //   })
 // );
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(FileUpload());
