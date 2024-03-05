@@ -7,6 +7,7 @@ import { kodeSuratReducer } from './actions/kodeSurat/kodeSuratSlice';
 import { peraturanReducer } from './actions/peraturan/peraturanSlice';
 import { perundanganPerReducer } from './actions/perundanganPeraturan/perundanganPerSlice';
 import { perundanganKepReducer } from './actions/perundanganKeputusan/perundanganKepSlice';
+import { loginReducer } from './actions/auth/loginSlice';
 
 const reducer = combineReducers({
   suratMasuk: suratMasukReducer,
@@ -17,5 +18,6 @@ const reducer = combineReducers({
   peraturan: peraturanReducer,
   perundanganPer: perundanganPerReducer,
   perundanganKep: perundanganKepReducer,
+  login: loginReducer
 });
 export default reducer;

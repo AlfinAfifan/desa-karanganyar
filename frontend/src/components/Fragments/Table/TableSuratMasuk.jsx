@@ -6,17 +6,13 @@ import Button from '../../Elements/Button/Button';
 import InputSuratMasuk from '../ModalInput/InputSuratMasuk';
 import ButtonIcon from '../../Elements/Button/ButtonIcon';
 import { HiCloudArrowUp, HiMiniCog6Tooth, HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash, HiTrash } from 'react-icons/hi2';
-import ModalDetail from '../../Elements/Modal/ModalDetail';
 import { useDispatch, useSelector } from 'react-redux';
-import PdfViewer from '../PdfViewer/PdfViewer';
 import ModalConfirm from '../../Elements/Modal/ModalConfirm';
 import { deleteByYear, deleteSuratMasuk, getSuratMasuk } from '../../../redux/actions/suratMasuk/thunkSuratMasuk';
 import { ExportSuratMasuk } from '../Export/ExportSuratMasuk';
 import { formatDate } from '../FormatDate/FormatDate';
-import { toast } from 'react-toastify';
 import Input from '../../Elements/Input/Input';
 import SyncLoader from 'react-spinners/SyncLoader';
-import { Link } from 'react-router-dom';
 
 const TableSuratMasuk = () => {
   // GET DATA
@@ -89,7 +85,6 @@ const TableSuratMasuk = () => {
 
   // GET DETAIL
   const [idSelected, setIdSelected] = useState(null);
-  const [urlSelected, setUrlSelected] = useState(null);
 
   // DELETE DATA
   const handleDelete = (id) => {
@@ -99,8 +94,6 @@ const TableSuratMasuk = () => {
   // FORMAT DATA
   const [confirmPwd, setConfirmPwd] = useState('');
   const form = useRef(null);
-  const isError = useSelector((state) => state.suratMasuk.error);
-  const isSuccess = useSelector((state) => state.suratMasuk.deleteSuccess);
 
   const handleDeleteAll = (year) => {
     dispatch(deleteByYear({ year: year, password: confirmPwd }));
@@ -229,7 +222,7 @@ const TableSuratMasuk = () => {
                   <td>{datafix.tanggal_surat ? formatDate(datafix.tanggal_surat) : ''}</td>
                   <td>{datafix.keterangan}</td>
                   <td className="flex justify-end">
-                    <div className="flex text-2xl">
+                    <div className="flex text-xl">
                       {/* Hapus */}
                       <ButtonIcon
                         hoverBgColor="hover:bg-slate-200"
@@ -251,11 +244,13 @@ const TableSuratMasuk = () => {
                       </ButtonIcon>
 
                       {/* Detail */}
-                      <ButtonIcon hoverBgColor="hover:bg-slate-200">
-                        <a href={datafix.url} target="_blank">
-                          <HiOutlineSquare2Stack className="text-yellow-600" />
-                        </a>
-                      </ButtonIcon>
+                      {datafix.url && (
+                        <ButtonIcon hoverBgColor="hover:bg-slate-200">
+                          <a href={datafix.url} target="_blank">
+                            <HiOutlineSquare2Stack className="text-yellow-600" />
+                          </a>
+                        </ButtonIcon>
+                      )}
                     </div>
                   </td>
                 </Tr>

@@ -29,6 +29,7 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
     fotoSebelum: null,
     fotoProses: null,
     fotoSesudah: null,
+    dokumen: null
   });
 
   const form = useRef(null);
@@ -62,13 +63,14 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
         fotoSebelum: null,
         fotoProses: null,
         fotoSesudah: null,
+        dokumen: null
       });
     }
   }, [dataEdit]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const { tanggal, namaProyek, volume, biaya, lokasi, keterangan, fotoSebelum, fotoProses, fotoSesudah } = formValues;
+    const { tanggal, namaProyek, volume, biaya, lokasi, keterangan, fotoSebelum, fotoProses, fotoSesudah, dokumen } = formValues;
 
     const formData = new FormData();
     formData.append('tanggal', tanggal);
@@ -80,6 +82,7 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
     formData.append('fotoSebelum', fotoSebelum);
     formData.append('fotoProses', fotoProses);
     formData.append('fotoSesudah', fotoSesudah);
+    formData.append('dokumen', dokumen);
 
     if (dataId.includes(dataEdit?.id)) {
       dispatch(updateInventaris({ id: dataEdit.id, data: formData }));
@@ -100,6 +103,7 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
       fotoSebelum: null,
       fotoProses: null,
       fotoSesudah: null,
+      dokumen: null
     });
 
     // Menutup modal
@@ -137,6 +141,10 @@ const InputInventaris = ({ idEdit, setIdEdit }) => {
             <div>
               <InputFile accept=".jpg, .jpeg, .png" label="Foto Sesudah ( jpg, jpeg, png )" name="fotoSesudah" onChange={(e) => setFormValues({ ...formValues, fotoSesudah: e.target.files[0] })} />
               {dataEdit?.fotoSesudah && <div className="text-sm text-yellow-500 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
+            </div>
+            <div>
+              <InputFile accept=".pdf" label="Upload Dokumen RAB ( pdf)" name="dokumen" onChange={(e) => setFormValues({ ...formValues, dokumen: e.target.files[0] })} />
+              {dataEdit?.dokumen && <div className="text-sm text-yellow-500 col-start-2 text-center">File sudah ada. Pilih ulang untuk mengganti</div>}
             </div>
           </div>
           <Button bgColor="bg-cyan-700 py-3" hoverBgColor="hover:bg-cyan-600">

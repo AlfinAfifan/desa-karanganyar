@@ -86,8 +86,6 @@ const TableKeputusan = () => {
   // FORMAT DATA
   const [confirmPwd, setConfirmPwd] = useState('');
   const form = useRef(null);
-  const isError = useSelector((state) => state.keputusan.error);
-  const isSuccess = useSelector((state) => state.keputusan.deleteSuccess);
 
   const handleDeleteAll = (year) => {
     dispatch(deleteByYear({ year: year, password: confirmPwd }));
@@ -235,11 +233,14 @@ const TableKeputusan = () => {
                       </ButtonIcon>
 
                       {/* Detail */}
-                      <ButtonIcon hoverBgColor="hover:bg-slate-200">
-                        <a href={datafix.url} target="_blank">
-                          <HiOutlineSquare2Stack className="text-yellow-600" />
-                        </a>
-                      </ButtonIcon>
+                      {datafix.url && (
+                        <ButtonIcon hoverBgColor="hover:bg-slate-200">
+                          <a href={datafix.url} target="_blank">
+                            <HiOutlineSquare2Stack className="text-yellow-600" />
+                          </a>
+                        </ButtonIcon>
+                      )}
+
                     </div>
                   </td>
                 </Tr>

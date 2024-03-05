@@ -234,11 +234,14 @@ const TablePeraturan = () => {
                       </ButtonIcon>
 
                       {/* Detail */}
-                      <ButtonIcon hoverBgColor="hover:bg-slate-200">
-                        <a href={datafix.url} target="_blank">
-                          <HiOutlineSquare2Stack className="text-yellow-600" />
-                        </a>
-                      </ButtonIcon>
+                      {datafix.url && (
+                        <ButtonIcon hoverBgColor="hover:bg-slate-200">
+                          <a href={datafix.url} target="_blank">
+                            <HiOutlineSquare2Stack className="text-yellow-600" />
+                          </a>
+                        </ButtonIcon>
+                      )}
+
                     </div>
                   </td>
                 </Tr>

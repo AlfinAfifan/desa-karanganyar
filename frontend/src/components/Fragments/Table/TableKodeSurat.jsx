@@ -89,7 +89,7 @@ const TableKodeSurat = () => {
                 <td>{datafix.kodeSurat}</td>
                 <td>{datafix.keterangan}</td>
                 <td className="flex justify-end">
-                  <div className="flex text-2xl">
+                  <div className="flex text-xl">
                     {/* Hapus */}
                     <ButtonIcon
                       hoverBgColor="hover:bg-slate-200"

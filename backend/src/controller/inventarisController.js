@@ -62,11 +62,13 @@ exports.createInventaris = async (req, res) => {
     const fotoSebelum = req.files?.fotoSebelum;
     const fotoProses = req.files?.fotoProses;
     const fotoSesudah = req.files?.fotoSesudah;
+    const dokumen = req.files?.dokumen;
 
     // Process each file and get URLs
     const fotoSebelumData = fotoSebelum ? await processFile(req, fotoSebelum) : null;
     const fotoProsesData = fotoProses ? await processFile(req, fotoProses) : null;
     const fotoSesudahData = fotoSesudah ? await processFile(req, fotoSesudah) : null;
+    const dokumenData = dokumen ? await processFile(req, dokumen) : null;
 
     // Save data to the database
     const inventaris = await inventarisModel.create({
@@ -82,6 +84,8 @@ exports.createInventaris = async (req, res) => {
       urlProses: fotoProsesData?.url,
       fotoSesudah: fotoSesudahData?.fileName,
       urlSesudah: fotoSesudahData?.url,
+      dokumen: dokumenData?.fileName,
+      urlDokumen: dokumenData?.url,
     });
 
     res.status(201).json({ message: 'Creating inventaris success', inventaris });
@@ -106,7 +110,7 @@ const processFile = (req, file) => {
     const url = `${process.env.DOMAIN}/Inventaris/${fileName}`;
 
     // Allowed file extensions
-    const allowedType = ['.jpg', '.jpeg', '.png'];
+    const allowedType = ['.jpg', '.jpeg', '.png', '.pdf'];
 
     // Validate file extension
     if (!allowedType.includes(ext.toLowerCase())) {
@@ -157,11 +161,13 @@ exports.updateInventaris = async (req, res) => {
     let fotoSebelumData = {};
     let fotoProsesData = {};
     let fotoSesudahData = {};
+    let dokumen = {};
 
     if (req.files) {
       fotoSebelumData = await processFileUpdate(req, req.files.fotoSebelum, inventaris.fotoSebelum);
       fotoProsesData = await processFileUpdate(req, req.files.fotoProses, inventaris.fotoProses);
       fotoSesudahData = await processFileUpdate(req, req.files.fotoSesudah, inventaris.fotoSesudah);
+      dokumen = await processFileUpdate(req, req.files.dokumen, inventaris.dokumen);
     }
 
     // request new update
@@ -182,6 +188,8 @@ exports.updateInventaris = async (req, res) => {
         urlProses: fotoProsesData.url || inventaris.urlProses,
         fotoSesudah: fotoSesudahData.fileName || inventaris.fotoSesudah,
         urlSesudah: fotoSesudahData.url || inventaris.urlSesudah,
+        dokumen: dokumen.fileName || inventaris.dokumen,
+        urlDokumen: dokumen.url || inventaris.urlDokumen,
       },
       {
         where: {
@@ -217,7 +225,7 @@ const processFileUpdate = async (req, file, oldFileName) => {
       const url = `${process.env.DOMAIN}/Inventaris/${fileName}`;
 
       // Allowed file extensions
-      const allowedType = ['.jpg', '.jpeg', '.png'];
+      const allowedType = ['.jpg', '.jpeg', '.png', '.pdf'];
 
       // Validate file extension
       if (!allowedType.includes(ext.toLowerCase())) {
@@ -272,6 +280,7 @@ exports.deleteInventaris = async (req, res) => {
     const filepath1 = `./public/Inventaris/${inventaris.fotoSebelum}`;
     const filepath2 = `./public/Inventaris/${inventaris.fotoProses}`;
     const filepath3 = `./public/Inventaris/${inventaris.fotoSesudah}`;
+    const fileDokumen = `./public/Inventaris/${inventaris.dokumen}`;
     // delete file in the filepath
     if (inventaris.fotoSebelum) {
       fs.unlinkSync(filepath1);
@@ -282,7 +291,10 @@ exports.deleteInventaris = async (req, res) => {
     if (inventaris.fotoSesudah) {
       fs.unlinkSync(filepath3);
     }
-    
+    if (inventaris.dokumen) {
+      fs.unlinkSync(fileDokumen);
+    }
+
     // delete file in databases by id
     await inventarisModel.destroy({
       where: {
@@ -339,11 +351,21 @@ exports.deleteDataByYear = async (req, res) => {
       const filepath1 = `./public/Inventaris/${data.fotoSebelum}`;
       const filepath2 = `./public/Inventaris/${data.fotoProses}`;
       const filepath3 = `./public/Inventaris/${data.fotoSesudah}`;
+      const fileDokumen = `./public/Inventaris/${data.dokumen}`;
 
       // Hapus file statis
-      fs.promises.unlink(filepath1);
-      fs.promises.unlink(filepath2);
-      fs.promises.unlink(filepath3);
+      if (data.fotoSebelum) {
+        fs.promises.unlink(filepath1);
+      }
+      if (data.fotoProses) {
+        fs.promises.unlink(filepath2);
+      }
+      if (data.fotoSesudah) {
+        fs.promises.unlink(filepath3);
+      }
+      if (data.dokumen) {
+        fs.promises.unlink(fileDokumen);
+      }
 
       // Hapus data di database
       await inventarisModel.destroy({

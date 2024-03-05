@@ -48,7 +48,7 @@ const SidebarElement = () => {
             ''
           ) : (
             <div className="flex flex-col">
-              <div className="text-2xl tracking-widest"> Pemerintah </div> <div className="whitespace-nowrap text-lg">Desa Karanganyar</div>
+              <div className="text-2xl font-semibold tracking-widest"> Pemerintah </div> <div className="whitespace-nowrap text-lg">Desa Karanganyar</div>
             </div>
           )}
         </div>

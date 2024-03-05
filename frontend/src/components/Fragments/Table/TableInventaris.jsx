@@ -6,14 +6,14 @@ import InputInventaris from '../ModalInput/InputInventaris';
 import Button from '../../Elements/Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonIcon from '../../Elements/Button/ButtonIcon';
-import { HiCloudArrowUp, HiMiniCog6Tooth, HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash, HiTrash } from 'react-icons/hi2';
+import { HiCloudArrowUp, HiMiniCog6Tooth, HiOutlineCamera, HiOutlinePencilSquare, HiOutlineSquare2Stack, HiOutlineTrash, HiTrash } from 'react-icons/hi2';
 import ModalConfirm from '../../Elements/Modal/ModalConfirm';
 import ModalDetail from '../../Elements/Modal/ModalDetail';
 import { deleteByYear, deleteInventaris, getInventaris } from '../../../redux/actions/inventaris/thunkInventaris';
 import { ExportInventaris } from '../Export/ExportInventaris';
-import { toast } from 'react-toastify';
 import Input from '../../Elements/Input/Input';
 import SyncLoader from 'react-spinners/SyncLoader';
+import ModalImage from '../../Elements/Modal/ModalImage';
 
 const TableInventaris = () => {
   const dispatch = useDispatch();
@@ -222,7 +222,7 @@ const TableInventaris = () => {
                   <td>{datafix.lokasi}</td>
                   <td>{datafix.keterangan}</td>
                   <td className="flex justify-end">
-                    <div className="flex text-2xl">
+                    <div className="flex text-xl">
                       {/* Hapus */}
                       <ButtonIcon
                         hoverBgColor="hover:bg-slate-200"
@@ -244,13 +244,21 @@ const TableInventaris = () => {
                       </ButtonIcon>
 
                       {/* Detail */}
+                      {datafix.urlDokumen && (
+                        <ButtonIcon hoverBgColor="hover:bg-slate-200">
+                          <a href={datafix.urlDokumen} target="_blank">
+                            <HiOutlineSquare2Stack className="text-yellow-600" />
+                          </a>
+                        </ButtonIcon>
+                      )}
+
                       <ButtonIcon
                         hoverBgColor="hover:bg-slate-200"
                         onClick={() => {
-                          document.getElementById('modal_file').showModal(), setIdSelected(datafix.id);
+                          document.getElementById('modal_image').showModal(), setIdSelected(datafix.id);
                         }}
                       >
-                        <HiOutlineSquare2Stack className="text-yellow-600" />
+                        <HiOutlineCamera />
                       </ButtonIcon>
                     </div>
                   </td>
@@ -266,22 +274,7 @@ const TableInventaris = () => {
         Yakin untuk menghapus data ini ?
       </ModalConfirm>
 
-      <ModalDetail>
-        <div className="grid grid-cols-3 gap-3 justify-center mt-3">
-          <div className="grid justify-center shadow-lg">
-            <img className="w-96 h-52 object-cover rounded-t-lg" src={detail.urlSebelum} alt="" />
-            <h1 className="font-semibold rounded-b-lg bg-cyan-600 text-white py-1">Foto Sebelum</h1>
-          </div>
-          <div className="grid justify-center shadow-lg">
-            <img className="w-96 h-52 object-cover rounded-t-lg" src={detail.urlProses} alt="" />
-            <h1 className="font-semibold rounded-b-lg bg-cyan-600 text-white py-1">Foto Proses</h1>
-          </div>
-          <div className="grid justify-center shadow-lg">
-            <img className="w-96 h-52 object-cover rounded-t-lg" src={detail.urlSesudah} alt="" />
-            <h1 className="font-semibold rounded-b-lg bg-cyan-600 text-white py-1">Foto Sesudah</h1>
-          </div>
-        </div>
-      </ModalDetail>
+      <ModalImage detail={detail} />
     </>
   );
 };

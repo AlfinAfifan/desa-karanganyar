@@ -5,37 +5,40 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
+import { useDispatch, useSelector } from 'react-redux';
 import Image from '../assets/img/not-found.jpg';
+import { login } from '../redux/actions/auth/loginThunk';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoginError, setIsLoginError] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const loading = useSelector((state) => state.login.loading);
 
   const handleLogin = async (data) => {
-    const { email, password } = data;
-    try {
-      const res = await axios.post(`${import.meta.env.VITE_APP_DOMAIN}/login`, data, {
-        withCredentials: true,
-      });
+    // try {
+    dispatch(login(data)).then((result) => {
+      const token = result.payload.accessToken;
+      if (token) {
+        const user = jwtDecode(token);
+        const allowedUserIDs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
-      const token = res.data.accessToken;
-      const user = jwtDecode(token);
-      const allowedUserIDs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
-
-      if (allowedUserIDs.includes(user.userid)) {
-        toast.success('Login Berhasil');
-        sessionStorage.setItem('access_token', token);
-        sessionStorage.setItem('email', user.email);
-        sessionStorage.setItem('name', user.name);
-        navigate('/dashboard');
+        if (allowedUserIDs.includes(user.userid)) {
+          toast.success('Login Berhasil');
+          sessionStorage.setItem('access_token', token);
+          sessionStorage.setItem('email', user.email);
+          sessionStorage.setItem('name', user.name);
+          navigate('/dashboard');
+        } else {
+          toast.error('Gagal Login !');
+        }
       } else {
-        toast.error('Gagal Login !');
+        setIsLoginError(true);
       }
-    } catch (error) {
-      setIsLoginError(true);
-      console.log(error);
-    }
+    });
   };
 
   const formik = useFormik({
@@ -135,7 +138,14 @@ const LoginPage = () => {
                 {formik.errors.password && formik.touched.password && <p className="mt-1 text-red-500 max-[640px]:text-sm">{formik.errors.password}</p>}
               </div>
               <button type="submit" className="w-full bg-cyan-600 hover:bg-cyan-500 rounded-full h-12 text-white font-semibold mt-8">
-                Login
+                {loading ? (
+                  <civ className="flex gap-2 justify-center">
+                    <p>Please wait</p>
+                    <ClipLoader color="#ffffff" size={25} cssOverride={{}} speedMultiplier={1} />
+                  </civ>
+                ) : (
+                  'Login'
+                )}
               </button>
             </form>
           </div>

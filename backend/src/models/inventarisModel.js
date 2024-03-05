@@ -13,9 +13,11 @@ const inventarisModel = db.define(
     fotoSebelum: DataTypes.STRING,
     fotoProses: DataTypes.STRING,
     fotoSesudah: DataTypes.STRING,
+    dokumen: DataTypes.STRING,
     urlSebelum: DataTypes.STRING,
     urlProses: DataTypes.STRING,
     urlSesudah: DataTypes.STRING,
+    urlDokumen: DataTypes.STRING,
   },
   {
     freezeTableName: true,
